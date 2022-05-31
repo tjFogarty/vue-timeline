@@ -6,7 +6,14 @@ const today = new Date();
 const startOfLastMonth = new DateTime(today).minus({ month: 1 }).startOf('month');
 const endOfNextMonth = new DateTime(today).plus({ month: 1 }).endOf('month');
 
-export default function useTimeline({ resources, events, columnWidth, resourceWidth, resourceHeight }) {
+export default function useTimeline({
+  resources, 
+  events, 
+  columnWidth, 
+  resourceWidth, 
+  resourceHeight,
+  headerHeight,
+}) {
   const container = ref(null);
   const scrollLeft = ref(0);
   const isMovingForwards = ref(false);
@@ -43,6 +50,30 @@ export default function useTimeline({ resources, events, columnWidth, resourceWi
       return null;
     }).filter((d) => d !== null);
   });
+  const eventPositions = computed(() => {
+    const positions = {};
+    events.forEach((event) => {
+      // find left pos based on date
+      const start = DateTime.fromFormat(event.startDate, 'y-MM-dd');
+      const end = DateTime.fromFormat(event.endDate, 'y-MM-dd');
+      const dateIndex = dates.value.findIndex((d) => d.valueOf() === start.valueOf());
+
+      if (dateIndex !== -1) {
+        const leftPos = (dateIndex * columnWidth) + resourceWidth;
+        const resourceIndex = resources.findIndex((r) => r.id === event.resourceId);
+        const topPos = headerHeight + (resourceIndex * resourceHeight);
+        const { days } = end.diff(start, 'days').toObject();
+
+        positions[event.id] = {
+          left: leftPos,
+          top: topPos,
+          width: (days + 1) * columnWidth,
+        };
+      }
+    });
+
+    return positions;
+  });
 
   function handleScroll(event) {
     const scrollLeftVal = event.target.scrollLeft;
@@ -75,11 +106,13 @@ export default function useTimeline({ resources, events, columnWidth, resourceWi
     resources,
     events,
     dates,
+    weekendOccurences,
+    eventPositions,
     timelineWidth,
     columnWidth,
     resourceWidth,
     resourceHeight,
-    weekendOccurences,
+    headerHeight,
   };
 }
 

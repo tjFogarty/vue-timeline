@@ -6,10 +6,14 @@
           <slot name="resource" v-bind="{ item }" />
         </template>
       </Resources>
-      
+
       <DatesHeader />
-      
+
       <WeekendIndicators />
+
+      <div v-for="event in events" :key="event.id" class="event" :style="getEventPositionStyles(event)">
+        {{ event.name }}
+      </div>
     </div>
   </div>
 </template>
@@ -41,23 +45,41 @@ const props = defineProps({
   resourceHeight: {
     type: Number,
     default: 80,
+  },
+  headerHeight: {
+    type: Number,
+    default: 50,
   }
 })
 
-const { timelineWidth, container, weekendOccurences } = provideTimeline({
+const { timelineWidth, container, eventPositions } = provideTimeline({
   resources: props.resources,
   events: props.events,
-  columnWidth: props.columnWidth, 
-  resourceWidth: props.resourceWidth, 
-  resourceHeight: props.resourceHeight
+  columnWidth: props.columnWidth,
+  resourceWidth: props.resourceWidth,
+  resourceHeight: props.resourceHeight,
+  headerHeight: props.headerHeight,
 });
 
 const timelineWidthPx = computed(() => {
   return `${timelineWidth.value}px`;
 })
+
+function getEventPositionStyles(event) {
+  const position = eventPositions.value[event.id];
+  return `top: ${position.top}px; left: ${position.left}px; width: ${position.width}px`;
+}
 </script>
 
 <style scoped>
+.event {
+  position: absolute;
+  background: coral;
+  color: white;
+  border-radius: 5px;
+  padding: 5px;
+}
+
 .timeline-container {
   width: 100%;
   position: relative;

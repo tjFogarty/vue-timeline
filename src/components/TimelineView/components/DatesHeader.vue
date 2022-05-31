@@ -14,10 +14,13 @@
 <script setup>
 import { computed } from 'vue';
 import { useCurrentTimeline } from '../composables/useTimeline';
-const { dates, columnWidth } = useCurrentTimeline();
+const { dates, columnWidth, headerHeight } = useCurrentTimeline();
 
 const columnWidthPx = computed(() => {
   return `${columnWidth}px`;
+});
+const headerHeightPx = computed(() => {
+  return `${headerHeight}px`;
 });
 </script>
 
@@ -25,6 +28,8 @@ const columnWidthPx = computed(() => {
 .date-list {
   display: flex;
   list-style: none;
+  height: v-bind(headerHeightPx);
+  overflow: hidden;
   margin: 0;
   padding: 0;
 }

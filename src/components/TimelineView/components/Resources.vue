@@ -1,32 +1,47 @@
 <template>
-  <ul class="resource-list">
-    <li v-for="resource in resources" :key="resource.id" class="resource-item">
-      <slot name="resource" v-bind="{ item: resource }" />
-    </li>
-  </ul>
+  <div class="resources">
+    <div class="resource-header">
+      Resources
+    </div>
+    <ul class="resource-list">
+      <li v-for="resource in resources" :key="resource.id" class="resource-item">
+        <slot name="resource" v-bind="{ item: resource }" />
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { useCurrentTimeline } from '../composables/useTimeline';
 
-const { resources, resourceWidth, resourceHeight } = useCurrentTimeline();
+const { resources, resourceWidth, resourceHeight, headerHeight } = useCurrentTimeline();
 
-const resourceWidthPx = computed(() =>{
+const resourceWidthPx = computed(() => {
   return `${resourceWidth}px`;
 });
 const resourceHeightPx = computed(() => {
   return `${resourceHeight}px`;
 });
+const headerHeightPx = computed(() => {
+  return `${headerHeight}px`;
+});
 </script>
 
 <style scoped>
-.resource-list {
+.resources {
   position: sticky;
+  left: 0;
+  width: v-bind(resourceWidthPx);
   background-color: white;
   border-right: 1px solid #ccc;
-  width: v-bind(resourceWidthPx);
-  left: 0;
+}
+
+.resource-header {
+  height: v-bind(headerHeightPx);
+}
+
+.resource-list {
   list-style: none;
   margin: 0;
   padding: 0;
