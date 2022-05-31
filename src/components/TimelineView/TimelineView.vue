@@ -1,24 +1,25 @@
 <template>
   <div class="timeline-container" ref="container">
     <div class="timeline">
-      <ul class="resource-list">
-        <li v-for="resource in resources" :key="resource.id" class="resource-item">
-          <slot name="resource" v-bind="{ item: resource }">
-          </slot>
-        </li>
-      </ul>
+      <Resources>
+        <template #resource="{ item }">
+          <slot name="resource" v-bind="{ item }" />
+        </template>
+      </Resources>
+      
       <DatesHeader />
-
-      <div v-for="weekend in weekendOccurences" :key="weekend.date.valueOf()" :style="`left: ${weekend.leftPos}px;`" class="weekend-indicator">
-      </div>
+      
+      <WeekendIndicators />
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { computed } from 'vue';
 import DatesHeader from './components/DatesHeader.vue';
+import Resources from './components/Resources.vue';
 import { provideTimeline } from './composables/useTimeline';
+import WeekendIndicators from './components/WeekendIndicators.vue';
 
 const props = defineProps({
   resources: {
@@ -50,6 +51,10 @@ const { timelineWidth, container, weekendOccurences } = provideTimeline({
   resourceWidth: props.resourceWidth, 
   resourceHeight: props.resourceHeight
 });
+
+const timelineWidthPx = computed(() => {
+  return `${timelineWidth.value}px`;
+})
 </script>
 
 <style scoped>
@@ -62,38 +67,12 @@ const { timelineWidth, container, weekendOccurences } = provideTimeline({
 .timeline {
   display: flex;
   font-family: sans-serif;
-  width: v-bind(`${timelineWidth}px`);
+  width: v-bind(timelineWidthPx);
 }
 
 .timeline *,
 .timeline *:before,
 .timeline *:after {
   box-sizing: border-box;
-}
-
-.resource-list {
-  position: sticky;
-  background-color: white;
-  border-right: 1px solid #ccc;
-  width: v-bind(`${props.resourceWidth}px`);
-  left: 0;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.resource-item {
-  height: v-bind(`${props.resourceHeight}px`);
-}
-
-.weekend-indicator {
-  position: absolute;
-  pointer-events: none;
-  z-index: -1;
-  top: 0;
-  opacity: 0.2;
-  height: 100%;
-  background-color: #ccc;
-  width: v-bind(`${columnWidth * 2}px`);
 }
 </style>

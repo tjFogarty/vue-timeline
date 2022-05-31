@@ -6,7 +6,7 @@ const today = new Date();
 const startOfLastMonth = new DateTime(today).minus({ month: 1 }).startOf('month');
 const endOfNextMonth = new DateTime(today).plus({ month: 1 }).endOf('month');
 
-export default function useTimeline({ resources, events, columnWidth, resourceWidth }) {
+export default function useTimeline({ resources, events, columnWidth, resourceWidth, resourceHeight }) {
   const container = ref(null);
   const scrollLeft = ref(0);
   const isMovingForwards = ref(false);
@@ -72,9 +72,13 @@ export default function useTimeline({ resources, events, columnWidth, resourceWi
 
   return {
     container,
+    resources,
+    events,
     dates,
     timelineWidth,
     columnWidth,
+    resourceWidth,
+    resourceHeight,
     weekendOccurences,
   };
 }

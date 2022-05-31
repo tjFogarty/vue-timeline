@@ -2,7 +2,7 @@
 <div>
   <TimelineView :resources="resources">
     <template #resource="{ item }">
-      <div>{{ item.name }}</div>
+      <div>ID {{ item.id }}: {{ item.name }}</div>
     </template>
   </TimelineView>
 </div>

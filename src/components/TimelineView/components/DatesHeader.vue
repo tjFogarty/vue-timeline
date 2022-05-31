@@ -12,8 +12,13 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useCurrentTimeline } from '../composables/useTimeline';
 const { dates, columnWidth } = useCurrentTimeline();
+
+const columnWidthPx = computed(() => {
+  return `${columnWidth}px`;
+});
 </script>
 
 <style scoped>
@@ -26,7 +31,8 @@ const { dates, columnWidth } = useCurrentTimeline();
 
 .date-item {
   text-align: center;
-  width: v-bind(`${columnWidth}px`);
+  padding: 5px 0;
+  width: v-bind(columnWidthPx);
 }
 
 .date-day-letter {
