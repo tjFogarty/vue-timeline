@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="date-list-container">
     <ul class="date-list">
       <li v-for="date in dates" :key="date.valueOf()" class="date-item">
         <span class="date-day-letter">{{ date.toFormat('ccccc') }}</span>
@@ -26,7 +26,11 @@ const headerHeightPx = computed(() => {
 
 <style scoped>
 .date-list {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   display: flex;
+  background-color: white;
   list-style: none;
   height: v-bind(headerHeightPx);
   overflow: hidden;

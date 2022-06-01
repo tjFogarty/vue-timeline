@@ -37,6 +37,10 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  visibleResources: {
+    type: Number,
+    default: 10,
+  },
   events: {
     type: Array,
     default: () => ([]),
@@ -71,6 +75,10 @@ const { timelineWidth, container, startDate, endDate, goToToday } = provideTimel
 const timelineWidthPx = computed(() => {
   return `${timelineWidth.value}px`;
 })
+
+const timelineHeightPx = computed(() => {
+  return `${props.visibleResources * props.resourceHeight + props.headerHeight}px`;
+});
 </script>
 
 <style scoped>
@@ -82,12 +90,13 @@ const timelineWidthPx = computed(() => {
 
 .timeline-container {
   width: 100%;
-  position: relative;
   overflow: auto;
+  height: v-bind(timelineHeightPx);
 }
 
 .timeline {
   display: flex;
+  position: relative;
   font-family: sans-serif;
   width: v-bind(timelineWidthPx);
 }

@@ -32,13 +32,16 @@ const headerHeightPx = computed(() => {
 .resources {
   position: sticky;
   left: 0;
-  z-index: 1;
+  z-index: 2;
   width: v-bind(resourceWidthPx);
   background-color: white;
   border-right: 1px solid #ccc;
 }
 
 .resource-header {
+  position: sticky;
+  top: 0;
+  background-color: white;
   display: flex;
   align-items: center;
   width: 100%;

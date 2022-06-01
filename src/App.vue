@@ -26,7 +26,7 @@ import TimelineView from './components/TimelineView/TimelineView.vue';
 
 const today = new Date();
 
-const resources = Array.from({ length: 10 }).map((_, i) => {
+const resources = Array.from({ length: 30 }).map((_, i) => {
   return {
     id: i + 1,
     name: 'Resource ' + (i + 1),
