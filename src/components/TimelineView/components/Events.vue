@@ -15,6 +15,8 @@ const resourceHeightPx = computed(() => {
 });
 
 function getEventPositionStyles(event) {
+  if (!eventPositions.value[event.id]) return '';
+
   const position = eventPositions.value[event.id];
   return `--transform: translate(${position.left}px, ${position.top}px); --width: ${position.width}px`;
 }
