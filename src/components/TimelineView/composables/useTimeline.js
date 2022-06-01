@@ -91,21 +91,21 @@ export default function useTimeline({
     // need to swap months in and out while preserving the scroll position
     if (isMovingForwards.value) {
       if (scrollLeftVal + event.target.offsetWidth >= timelineWidth.value - 500) {
-        const previousStartDate = startDate.value.toJSDate();
+        const previousStartMonthDayCount = daysInMonthCount(startDate.value.toJSDate());
         
         startDate.value = startDate.value.plus({ month: 1 });
         endDate.value = endDate.value.plus({ month: 1 });
 
-        container.value.scrollLeft = scrollLeft.value - daysInMonthCount(previousStartDate) * columnWidth;
+        container.value.scrollLeft = scrollLeft.value - (previousStartMonthDayCount * columnWidth);
       }
     } else if (isMovingBackwards.value) {
       if (scrollLeftVal < 500) {
-        const previousEndDate = endDate.value.toJSDate();
+        const previousEndMonthDayCount = daysInMonthCount(endDate.value.toJSDate());
 
         startDate.value = startDate.value.minus({ month: 1 });
         endDate.value = endDate.value.minus({ month: 1 });
 
-        container.value.scrollLeft = scrollLeft.value + daysInMonthCount(previousEndDate) * columnWidth;
+        container.value.scrollLeft = scrollLeft.value + (previousEndMonthDayCount * columnWidth) - columnWidth;
       }
     }
   }
