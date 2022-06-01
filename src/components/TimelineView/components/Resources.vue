@@ -39,6 +39,9 @@ const headerHeightPx = computed(() => {
 }
 
 .resource-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
   height: v-bind(headerHeightPx);
 }
 

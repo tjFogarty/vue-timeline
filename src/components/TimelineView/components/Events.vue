@@ -12,11 +12,11 @@ const { events, eventPositions, resourceHeight } = useCurrentTimeline();
 
 const resourceHeightPx = computed(() => {
   return `${resourceHeight}px`;
-})
+});
 
 function getEventPositionStyles(event) {
   const position = eventPositions.value[event.id];
-  return `top: ${position.top}px; left: ${position.left}px; width: ${position.width}px`;
+  return `--transform: translate(${position.left}px, ${position.top}px); --width: ${position.width}px`;
 }
 </script>
 
@@ -25,5 +25,7 @@ function getEventPositionStyles(event) {
   position: absolute;
   padding: 5px;
   height: v-bind(resourceHeightPx);
+  transform: var(--transform);
+  width: var(--width);
 }
 </style>

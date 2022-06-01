@@ -1,6 +1,7 @@
 <template>
-<div v-for="weekend in weekendOccurences" :key="weekend.date.valueOf()" :style="`left: ${weekend.leftPos}px;`" class="weekend-indicator">
-      </div>
+  <div v-for="weekend in weekendOccurences" :key="weekend.date.valueOf()"
+    :style="`--transform: translateX(${weekend.leftPos}px);`" class="weekend-indicator" aria-hidden="true">
+  </div>
 </template>
 
 <script setup>
@@ -18,6 +19,7 @@ const weekendIndicatorWidth = computed(() => {
 .weekend-indicator {
   position: absolute;
   pointer-events: none;
+  transform: var(--transform);
   z-index: -1;
   top: 0;
   opacity: 0.2;
