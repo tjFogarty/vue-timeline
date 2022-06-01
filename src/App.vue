@@ -2,7 +2,7 @@
   <div>
     <TimelineView :resources="resources" :events="events">
       <template #resource="{ item }">
-        <div>ID {{ item.id }}: {{ item.name }}</div>
+        <div class="custom-resource">ID {{ item.id }}: {{ item.name }}</div>
       </template>
 
       <template #event="{ item }">
@@ -38,6 +38,8 @@ const events = [
 
 <style scoped>
 .custom-event {
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 100%;
   padding: 10px;
@@ -52,5 +54,13 @@ const events = [
 .custom-event.event {
   background-color: gray;
   color: white;
+}
+
+.custom-resource {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+  height: 100%;
 }
 </style>

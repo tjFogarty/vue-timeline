@@ -47,7 +47,7 @@ const props = defineProps({
   },
   resourceHeight: {
     type: Number,
-    default: 80,
+    default: 50,
   },
   headerHeight: {
     type: Number,

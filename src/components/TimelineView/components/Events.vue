@@ -1,13 +1,18 @@
 <template>
-  <div v-for="event in events" :key="event.id" class="event" :style="getEventPositionStyles(event)">
+  <div v-for="event in events" :key="event.id" class="event" :style="getEventPositionStyles(event)" draggable="true">
     <slot name="event" v-bind="{ item: event }">{{ event.name }}</slot>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useCurrentTimeline } from '../composables/useTimeline';
 
-const { events, eventPositions } = useCurrentTimeline();
+const { events, eventPositions, resourceHeight } = useCurrentTimeline();
+
+const resourceHeightPx = computed(() => {
+  return `${resourceHeight}px`;
+})
 
 function getEventPositionStyles(event) {
   const position = eventPositions.value[event.id];
@@ -18,5 +23,7 @@ function getEventPositionStyles(event) {
 <style scoped>
 .event {
   position: absolute;
+  padding: 5px;
+  height: v-bind(resourceHeightPx);
 }
 </style>
