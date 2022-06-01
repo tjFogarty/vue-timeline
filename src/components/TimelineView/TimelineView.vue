@@ -15,11 +15,11 @@
 
       <WeekendIndicators />
 
-      <Events>
+      <Event v-for="event in events" :key="event.id" :data="event">
         <template #event="{ item }">
           <slot name="event" v-bind="{ item }" />
         </template>
-      </Events>
+      </Event>
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@ import { provideTimeline } from './composables/useTimeline';
 import DatesHeader from './components/DatesHeader.vue';
 import Resources from './components/Resources.vue';
 import WeekendIndicators from './components/WeekendIndicators.vue';
-import Events from './components/Events.vue';
+import Event from './components/Event.vue';
 
 const props = defineProps({
   resources: {
