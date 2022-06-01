@@ -1,5 +1,8 @@
 <template>
-  <button type="button" @click="goToToday">Go to today</button>
+  <div>
+    <p class="dates">{{ startDate.toFormat('y-MM-dd') }} - {{ endDate.toFormat('y-MM-dd') }}</p>
+    <button type="button" @click="goToToday">Go to today</button>
+  </div>
   <div class="timeline-container" ref="container">
     <div class="timeline">
       <Resources>
@@ -56,7 +59,7 @@ const props = defineProps({
   }
 })
 
-const { timelineWidth, container, goToToday } = provideTimeline({
+const { timelineWidth, container, startDate, endDate, goToToday } = provideTimeline({
   resources: props.resources,
   events: props.events,
   columnWidth: props.columnWidth,
@@ -71,6 +74,12 @@ const timelineWidthPx = computed(() => {
 </script>
 
 <style scoped>
+.dates {
+  font-family: sans-serif;
+  font-weight: 600;
+  text-align: center;
+}
+
 .timeline-container {
   width: 100%;
   position: relative;

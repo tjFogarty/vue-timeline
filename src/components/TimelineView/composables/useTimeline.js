@@ -128,6 +128,8 @@ export default function useTimeline({
   });
 
   return {
+    startDate,
+    endDate,
     container,
     goToToday,
     resources,
