@@ -40,6 +40,7 @@ const events = [
 .custom-event {
   width: 100%;
   height: 100%;
+  padding: 10px;
   border-radius: 5px;
 }
 

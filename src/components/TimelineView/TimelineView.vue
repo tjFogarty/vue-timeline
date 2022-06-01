@@ -81,7 +81,9 @@ const timelineWidthPx = computed(() => {
   font-family: sans-serif;
   width: v-bind(timelineWidthPx);
 }
+</style>
 
+<style>
 .timeline *,
 .timeline *:before,
 .timeline *:after {
