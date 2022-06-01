@@ -21,7 +21,10 @@
  * 
  * It's possible, then, to place anything anywhere on the grid. 
  */
+import { DateTime } from 'luxon';
 import TimelineView from './components/TimelineView/TimelineView.vue';
+
+const today = new Date();
 
 const resources = Array.from({ length: 10 }).map((_, i) => {
   return {
@@ -31,8 +34,8 @@ const resources = Array.from({ length: 10 }).map((_, i) => {
 });
 
 const events = [
-  { id: 1, name: 'Meeting', type: 'event', startDate: '2022-05-05', endDate: '2022-05-08', resourceId: 5 },
-  { id: 4, name: 'Design Spec', type: 'task', startDate: '2022-05-03', endDate: '2022-05-05', resourceId: 2 },
+  { id: 1, name: 'Meeting', type: 'event', startDate: new DateTime(today).plus({ days: 1 }).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'), resourceId: 5 },
+  { id: 4, name: 'Design Spec', type: 'task', startDate: new DateTime(today).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'), resourceId: 2 },
 ];
 </script>
 

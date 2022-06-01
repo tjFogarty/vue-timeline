@@ -1,4 +1,5 @@
 <template>
+  <button type="button" @click="goToToday">Go to today</button>
   <div class="timeline-container" ref="container">
     <div class="timeline">
       <Resources>
@@ -55,7 +56,7 @@ const props = defineProps({
   }
 })
 
-const { timelineWidth, container } = provideTimeline({
+const { timelineWidth, container, goToToday } = provideTimeline({
   resources: props.resources,
   events: props.events,
   columnWidth: props.columnWidth,

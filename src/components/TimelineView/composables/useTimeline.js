@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref, computed, provide, inject } from 'vue';
+import { onMounted, onUnmounted, ref, computed, nextTick, provide, inject } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
 import { DateTime } from 'luxon';
 
@@ -56,7 +56,7 @@ export default function useTimeline({
       // find left pos based on date
       const start = DateTime.fromFormat(event.startDate, 'y-MM-dd');
       const end = DateTime.fromFormat(event.endDate, 'y-MM-dd');
-      const dateIndex = dates.value.findIndex((d) => d.valueOf() === start.valueOf());
+      const dateIndex = dates.value.findIndex((d) => d.hasSame(start, 'day'));
 
       if (dateIndex !== -1) {
         const leftPos = (dateIndex * columnWidth) + resourceWidth;
@@ -74,6 +74,13 @@ export default function useTimeline({
 
     return positions;
   });
+  const todayPosition = computed(() => {
+    const now = new DateTime(today);
+
+    return dates.value.findIndex((d) => {
+      return d.hasSame(now, 'day');
+    });
+  });
 
   function handleScroll(event) {
     const scrollLeftVal = event.target.scrollLeft;
@@ -82,19 +89,38 @@ export default function useTimeline({
     scrollLeft.value = scrollLeftVal;
 
     // need to swap months in and out while preserving the scroll position
-    if (scrollLeftVal + event.target.offsetWidth >= timelineWidth.value - 500 && isMovingForwards.value) {
-      // startDate.value = startDate.value.plus({ month: 1 });
-      // endDate.value = endDate.value.plus({ month: 1 });
-    } else if (scrollLeftVal < 500 && isMovingBackwards.value) {
-      // startDate.value = startDate.value.minus({ month: 1 });
-      // endDate.value = endDate.value.minus({ month: 1 });
+    if (isMovingForwards.value) {
+      if (scrollLeftVal + event.target.offsetWidth >= timelineWidth.value - 500) {
+        startDate.value = startDate.value.plus({ month: 1 });
+        endDate.value = endDate.value.plus({ month: 1 });
+
+        container.value.scrollLeft = scrollLeft.value - daysInMonthCount(startDate.value.toJSDate()) * columnWidth;
+      }
+    } else if (isMovingBackwards.value) {
+      if (scrollLeftVal < 500) {
+        startDate.value = startDate.value.minus({ month: 1 });
+        endDate.value = endDate.value.minus({ month: 1 });
+
+        container.value.scrollLeft = scrollLeft.value + daysInMonthCount(endDate.value.toJSDate()) * columnWidth;
+      }
     }
+  }
+
+  function goToToday() {
+    startDate.value = startOfLastMonth;
+    endDate.value = endOfNextMonth;
+    container.value.scrollLeft = todayPosition.value * columnWidth;
   }
 
   const throttledHandleScroll = useThrottleFn(handleScroll, 100);
 
+  function daysInMonthCount(date) {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  }
+
   onMounted(() => {
     container.value.addEventListener('scroll', throttledHandleScroll);
+    goToToday();
   });
 
   onUnmounted(() => {
@@ -103,6 +129,7 @@ export default function useTimeline({
 
   return {
     container,
+    goToToday,
     resources,
     events,
     dates,
