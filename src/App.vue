@@ -4,6 +4,12 @@
       <template #resource="{ item }">
         <div>ID {{ item.id }}: {{ item.name }}</div>
       </template>
+
+      <template #event="{ item }">
+        <div class="custom-event" :class="item.type">
+          {{ item.type }}: {{ item.name }}
+        </div>
+      </template>
     </TimelineView>
   </div>
 </template>
@@ -25,6 +31,25 @@ const resources = Array.from({ length: 10 }).map((_, i) => {
 });
 
 const events = [
-  { id: 1, name: 'Meeting', type: 'task', startDate: '2022-04-05', endDate: '2022-04-08', resourceId: 1 }
+  { id: 1, name: 'Meeting', type: 'event', startDate: '2022-05-05', endDate: '2022-05-08', resourceId: 5 },
+  { id: 4, name: 'Design Spec', type: 'task', startDate: '2022-05-03', endDate: '2022-05-05', resourceId: 2 },
 ];
 </script>
+
+<style scoped>
+.custom-event {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.custom-event.task {
+  background-color: burlywood;
+  color: white;
+}
+
+.custom-event.event {
+  background-color: gray;
+  color: white;
+}
+</style>

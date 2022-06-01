@@ -11,19 +11,22 @@
 
       <WeekendIndicators />
 
-      <div v-for="event in events" :key="event.id" class="event" :style="getEventPositionStyles(event)">
-        {{ event.name }}
-      </div>
+      <Events>
+        <template #event="{ item }">
+          <slot name="event" v-bind="{ item }" />
+        </template>
+      </Events>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
+import { provideTimeline } from './composables/useTimeline';
 import DatesHeader from './components/DatesHeader.vue';
 import Resources from './components/Resources.vue';
-import { provideTimeline } from './composables/useTimeline';
 import WeekendIndicators from './components/WeekendIndicators.vue';
+import Events from './components/Events.vue';
 
 const props = defineProps({
   resources: {
@@ -52,7 +55,7 @@ const props = defineProps({
   }
 })
 
-const { timelineWidth, container, eventPositions } = provideTimeline({
+const { timelineWidth, container } = provideTimeline({
   resources: props.resources,
   events: props.events,
   columnWidth: props.columnWidth,
@@ -64,22 +67,9 @@ const { timelineWidth, container, eventPositions } = provideTimeline({
 const timelineWidthPx = computed(() => {
   return `${timelineWidth.value}px`;
 })
-
-function getEventPositionStyles(event) {
-  const position = eventPositions.value[event.id];
-  return `top: ${position.top}px; left: ${position.left}px; width: ${position.width}px`;
-}
 </script>
 
 <style scoped>
-.event {
-  position: absolute;
-  background: coral;
-  color: white;
-  border-radius: 5px;
-  padding: 5px;
-}
-
 .timeline-container {
   width: 100%;
   position: relative;
