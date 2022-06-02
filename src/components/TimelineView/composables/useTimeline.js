@@ -18,6 +18,7 @@ export default function useTimeline({
   const scrollLeft = ref(0);
   const isMovingForwards = ref(false);
   const isMovingBackwards = ref(false);
+  const mousePosition = ref({ x: 0, y: 0 });
   const startDate = ref(startOfLastMonth);
   const endDate = ref(endOfNextMonth);
   const dates = computed(() => {
@@ -122,12 +123,25 @@ export default function useTimeline({
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   }
 
+  function handleMouseMove(e) {
+    const rect = container.value.getBoundingClientRect();
+    const x = e.pageX + container.value.scrollLeft - rect.left;
+    const y = e.pageY + container.value.scrollTop - rect.top;
+    const topPos = y - (y % resourceHeight);
+    const resourceIndex = (topPos / resourceHeight) - 1;
+    const dateIndex = Math.floor(((x - resourceWidth) / columnWidth));
+
+    console.log(resources[resourceIndex]?.name || 'Not on a resource', dates.value[dateIndex].toFormat('y-MM-dd'));
+  }
+
   onMounted(() => {
+    container.value.addEventListener('mousemove', handleMouseMove);
     container.value.addEventListener('scroll', throttledHandleScroll);
     goToToday();
   });
 
   onUnmounted(() => {
+    container.value.removeEventListener('mousemove', handleMouseMove);
     container.value.removeEventListener('scroll', throttledHandleScroll);
   });
 
