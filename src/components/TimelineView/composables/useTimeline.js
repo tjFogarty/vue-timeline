@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref, computed, nextTick, provide, inject } from 'vue';
+import { onMounted, onUnmounted, ref, computed, watch, provide, shallowRef, inject } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
 import { DateTime } from 'luxon';
 
@@ -14,13 +14,14 @@ export default function useTimeline({
   resourceHeight,
   headerHeight,
 }) {
-  const container = ref(null);
-  const scrollLeft = ref(0);
-  const isMovingForwards = ref(false);
-  const isMovingBackwards = ref(false);
-  const mousePosition = ref({ x: 0, y: 0 });
-  const startDate = ref(startOfLastMonth);
-  const endDate = ref(endOfNextMonth);
+  const container = shallowRef(null);
+  const scrollLeft = shallowRef(0);
+  const isMovingForwards = shallowRef(false);
+  const isMovingBackwards = shallowRef(false);
+  const hoveredResourceId = shallowRef(null);
+  const hoveredDate = shallowRef(null);
+  const startDate = shallowRef(startOfLastMonth);
+  const endDate = shallowRef(endOfNextMonth);
   const dates = computed(() => {
     let start = new DateTime(startDate.value);
     const dates = [];
@@ -83,6 +84,10 @@ export default function useTimeline({
     });
   });
 
+  watch([hoveredResourceId, hoveredDate], ([resourceId, date]) => {
+    console.log({ resourceId, date: date?.toFormat('y-MM-dd') });
+  });
+
   function handleScroll(event) {
     const scrollLeftVal = event.target.scrollLeft;
     isMovingForwards.value = scrollLeftVal > scrollLeft.value;
@@ -131,17 +136,20 @@ export default function useTimeline({
     const resourceIndex = (topPos / resourceHeight) - 1;
     const dateIndex = Math.floor(((x - resourceWidth) / columnWidth));
 
-    console.log(resources[resourceIndex]?.name || 'Not on a resource', dates.value[dateIndex].toFormat('y-MM-dd'));
+    hoveredResourceId.value = resources[resourceIndex]?.id;
+    hoveredDate.value = dates.value[dateIndex];
   }
 
+  const throttledHandleMouseMove = useThrottleFn(handleMouseMove, 100);
+
   onMounted(() => {
-    container.value.addEventListener('mousemove', handleMouseMove);
+    container.value.addEventListener('mousemove', throttledHandleMouseMove);
     container.value.addEventListener('scroll', throttledHandleScroll);
     goToToday();
   });
 
   onUnmounted(() => {
-    container.value.removeEventListener('mousemove', handleMouseMove);
+    container.value.removeEventListener('mousemove', throttledHandleMouseMove);
     container.value.removeEventListener('scroll', throttledHandleScroll);
   });
 
