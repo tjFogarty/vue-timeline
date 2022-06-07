@@ -129,6 +129,7 @@ export default function useTimeline({
     startDate.value = startOfLastMonth;
     endDate.value = endOfNextMonth;
     container.value.scrollLeft = todayPosition.value * columnWidth;
+    container.value.scrollTop = 0;
   }
 
   const throttledHandleScroll = useThrottleFn(handleScroll, 100);

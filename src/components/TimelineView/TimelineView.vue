@@ -95,6 +95,7 @@ const timelineHeightPx = computed(() => {
 .timeline-container {
   width: 100%;
   overflow: auto;
+  border: 1px solid #ccc;
   height: v-bind(timelineHeightPx);
 }
 
