@@ -1,5 +1,6 @@
 <template>
-  <div class="event" :style="positionStyles" ref="target">
+  <div class="event" :style="positionStyles" ref="target" draggable="true" @dragstart="handleDragStart"
+    @dragend="handleDragEnd">
     <slot v-if="targetIsVisible" name="event" v-bind="{ item: data }">{{ data.name }}</slot>
   </div>
 </template>
@@ -22,16 +23,29 @@ const { eventPositions, resourceHeight } = useCurrentTimeline();
 const resourceHeightPx = computed(() => {
   return `${resourceHeight}px`;
 });
-const positionStyles = computed(() => {
+const position = computed(() => {
   if (!eventPositions.value[props.data.id]) return '';
+  const pos = eventPositions.value[props.data.id];
+  return { x: pos.left, y: pos.top, w: pos.width };
+});
+const positionStyles = computed(() => {
+  if (!position.value) return '';
 
-  const position = eventPositions.value[props.data.id];
-  return `--transform: translate(${position.left}px, ${position.top}px); --width: ${position.width}px`;
+  return `--transform: translate(${position.value.x}px, ${position.value.y}px); --width: ${position.value.w}px`;
 });
 
 useIntersectionObserver(target, ([{ isIntersecting }]) => {
   targetIsVisible.value = isIntersecting;
 });
+
+function handleDragStart(e) {
+  console.log('drag start', { e })
+  e.dataTransfer.dropEffect = 'move';
+}
+
+function handleDragEnd(e) {
+  console.log('drag end', { e });
+}
 </script>
 
 <style scoped>

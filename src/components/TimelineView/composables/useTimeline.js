@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref, computed, watch, provide, shallowRef, inject } from 'vue';
+import { onMounted, onUnmounted, ref, computed, provide, shallowRef, inject } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
 import { DateTime } from 'luxon';
 
@@ -33,6 +33,20 @@ export default function useTimeline({
 
     return dates;
   });
+  const datePositions = computed(() => {
+    const positions = {};
+    dates.value.forEach((date, index) => {
+      positions[date.toFormat('y-MM-dd')] = (index * columnWidth) + resourceWidth;
+    });
+    return positions;
+  });
+  const resourcePositions = computed(() => {
+    const positions = {};
+    resources.forEach((resource, index) => {
+      positions[resource.id] = headerHeight + (index * resourceHeight);
+    });
+    return positions;
+  });
   const timelineWidth = computed(() => {
     return (dates.value.length * columnWidth) + resourceWidth;
   });
@@ -61,9 +75,8 @@ export default function useTimeline({
       const dateIndex = dates.value.findIndex((d) => d.hasSame(start, 'day'));
 
       if (dateIndex !== -1) {
-        const leftPos = (dateIndex * columnWidth) + resourceWidth;
-        const resourceIndex = resources.findIndex((r) => r.id === event.resourceId);
-        const topPos = headerHeight + (resourceIndex * resourceHeight);
+        const leftPos = datePositions.value[event.startDate];
+        const topPos = resourcePositions.value[event.resourceId];
         const { days } = end.diff(start, 'days').toObject();
 
         positions[event.id] = {
@@ -82,10 +95,6 @@ export default function useTimeline({
     return dates.value.findIndex((d) => {
       return d.hasSame(now, 'day');
     });
-  });
-
-  watch([hoveredResourceId, hoveredDate], ([resourceId, date]) => {
-    console.log({ resourceId, date: date?.toFormat('y-MM-dd') });
   });
 
   function handleScroll(event) {
@@ -142,15 +151,22 @@ export default function useTimeline({
 
   const throttledHandleMouseMove = useThrottleFn(handleMouseMove, 100);
 
+  // this will make the `dragend` listener fire immediately
+  function handleDragOver(e) {
+    e.preventDefault();
+  }
+
   onMounted(() => {
     container.value.addEventListener('mousemove', throttledHandleMouseMove);
     container.value.addEventListener('scroll', throttledHandleScroll);
+    container.value.addEventListener('dragover', handleDragOver);
     goToToday();
   });
 
   onUnmounted(() => {
     container.value.removeEventListener('mousemove', throttledHandleMouseMove);
     container.value.removeEventListener('scroll', throttledHandleScroll);
+    container.value.removeEventListener('dragover', handleDragOver);
   });
 
   return {
@@ -161,6 +177,8 @@ export default function useTimeline({
     resources,
     events,
     dates,
+    datePositions,
+    resourcePositions,
     weekendOccurences,
     eventPositions,
     timelineWidth,
