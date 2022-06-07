@@ -168,7 +168,7 @@ export default function useTimeline({
     container.value.removeEventListener('scroll', throttledHandleScroll);
     container.value.removeEventListener('dragover', handleDragOver);
   });
-
+``
   return {
     startDate,
     endDate,
@@ -186,6 +186,8 @@ export default function useTimeline({
     resourceWidth,
     resourceHeight,
     headerHeight,
+    hoveredDate,
+    hoveredResourceId,
   };
 }
 
