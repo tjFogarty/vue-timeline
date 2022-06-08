@@ -2,7 +2,7 @@
   <div class="info">
     <p>Visible Dates: <strong>{{ startDate.toFormat('y-MM-dd') }} - {{ endDate.toFormat('y-MM-dd') }}</strong></p>
     <p>
-      Mouse position: <strong>{{ hoveredDate && hoveredDate.toFormat('yy-MM-dd') }}
+      Mouse position: <strong>{{ hoveredDate && hoveredDate.toFormat('y-MM-dd') }}
       {{ hoveredResourceId && `over resource id ${hoveredResourceId}` }}
       </strong>
     </p>
