@@ -30,7 +30,9 @@ const headerHeightPx = computed(() => {
   top: 0;
   z-index: 1;
   display: flex;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
   list-style: none;
   height: v-bind(headerHeightPx);
   overflow: hidden;

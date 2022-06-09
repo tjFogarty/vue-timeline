@@ -10,10 +10,10 @@
   "dependencies": {
     "@vueuse/core": "^8.6.0",
     "luxon": "^2.4.0",
-    "vue": "^3.2.25"
+    "vue": "^3.2.37"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
-    "vite": "^2.9.9"
+    "vite": "^2.9.10"
   }
 }

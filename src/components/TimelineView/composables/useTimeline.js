@@ -25,7 +25,7 @@ export default function useTimeline({
   const dates = computed(() => {
     let start = new DateTime(startDate.value);
     const dates = [];
-
+    
     while (start <= endDate.value) {
       dates.push(start);
       start = start.plus({ day: 1 });
@@ -35,16 +35,20 @@ export default function useTimeline({
   });
   const datePositions = computed(() => {
     const positions = {};
+
     dates.value.forEach((date, index) => {
       positions[date.toFormat('y-MM-dd')] = (index * columnWidth) + resourceWidth;
     });
+
     return positions;
   });
   const resourcePositions = computed(() => {
     const positions = {};
+
     resources.forEach((resource, index) => {
       positions[resource.id] = headerHeight + (index * resourceHeight);
     });
+
     return positions;
   });
   const timelineWidth = computed(() => {
@@ -52,8 +56,8 @@ export default function useTimeline({
   });
   const weekendOccurences = computed(() => {
     let leftPos = resourceWidth;
-
-    return dates.value.map((d) => {
+    
+    const weekends = dates.value.map((d) => {
       leftPos = leftPos + columnWidth;
 
       if (parseInt(d.toFormat('c'), 10) === 6) {
@@ -62,9 +66,11 @@ export default function useTimeline({
           leftPos: leftPos - columnWidth,
         };
       }
-
+      
       return null;
     }).filter((d) => d !== null);
+
+    return weekends;
   });
   const eventPositions = computed(() => {
     const positions = {};
@@ -72,13 +78,18 @@ export default function useTimeline({
       // find left pos based on date
       const start = DateTime.fromFormat(event.startDate, 'y-MM-dd');
       const end = DateTime.fromFormat(event.endDate, 'y-MM-dd');
-      const dateIndex = dates.value.findIndex((d) => d.hasSame(start, 'day'));
+      
+      if (start < startDate.value || end > endDate.value) {
+        return;
+      }
 
+      const dateIndex = dates.value.findIndex((d) => d.hasSame(start, 'day'));
+      
       if (dateIndex !== -1) {
         const leftPos = datePositions.value[event.startDate];
         const topPos = resourcePositions.value[event.resourceId];
         const { days } = end.diff(start, 'days').toObject();
-
+        
         positions[event.id] = {
           left: leftPos,
           top: topPos,
@@ -86,7 +97,7 @@ export default function useTimeline({
         };
       }
     });
-
+    
     return positions;
   });
   const todayPosition = computed(() => {
@@ -110,17 +121,22 @@ export default function useTimeline({
         
         startDate.value = startDate.value.plus({ month: 1 });
         endDate.value = endDate.value.plus({ month: 1 });
-
-        container.value.scrollLeft = scrollLeft.value - (previousStartMonthDayCount * columnWidth);
+        
+        window.requestAnimationFrame(() => {
+          container.value.scrollLeft = scrollLeft.value - (previousStartMonthDayCount * columnWidth);
+        });
       }
     } else if (isMovingBackwards.value) {
       if (scrollLeftVal < 500) {
         const previousEndMonthDayCount = daysInMonthCount(endDate.value.toJSDate());
-
+        
         startDate.value = startDate.value.minus({ month: 1 });
         endDate.value = endDate.value.minus({ month: 1 });
+        
+        window.requestAnimationFrame(() => {
+          container.value.scrollLeft = scrollLeft.value + (previousEndMonthDayCount * columnWidth) - columnWidth;
+        });
 
-        container.value.scrollLeft = scrollLeft.value + (previousEndMonthDayCount * columnWidth) - columnWidth;
       }
     }
   }
@@ -158,8 +174,8 @@ export default function useTimeline({
   }
 
   onMounted(() => {
-    container.value.addEventListener('mousemove', throttledHandleMouseMove);
-    container.value.addEventListener('scroll', throttledHandleScroll);
+    container.value.addEventListener('mousemove', throttledHandleMouseMove, { passive: true });
+    container.value.addEventListener('scroll', throttledHandleScroll, { passive: true });
     container.value.addEventListener('dragover', handleDragOver);
     goToToday();
   });
@@ -169,7 +185,7 @@ export default function useTimeline({
     container.value.removeEventListener('scroll', throttledHandleScroll);
     container.value.removeEventListener('dragover', handleDragOver);
   });
-``
+
   return {
     startDate,
     endDate,
