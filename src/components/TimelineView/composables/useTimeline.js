@@ -33,6 +33,17 @@ export default function useTimeline({
 
     return dates;
   });
+  const groupedDatesByMonth = computed(() => {
+    const groupedDates = {};
+    dates.value.forEach(date => {
+      const month = date.toFormat('MMMM');
+      if (!groupedDates[month]) {
+        groupedDates[month] = [];
+      }
+      groupedDates[month].push(date);
+    });
+    return groupedDates;
+  });
   const datePositions = computed(() => {
     const positions = {};
 
@@ -124,7 +135,7 @@ export default function useTimeline({
         endDate.value = endDate.value.plus({ month: 1 }).endOf('month');
 
         const newScrollPosition = scrollLeft.value - (previousStartMonthDayCount * columnWidth);
-        
+
         nextTick(() => {
           container.value.scrollLeft = newScrollPosition;
         });
@@ -195,6 +206,7 @@ export default function useTimeline({
     resources,
     events,
     dates,
+    groupedDatesByMonth,
     datePositions,
     resourcePositions,
     weekendOccurences,

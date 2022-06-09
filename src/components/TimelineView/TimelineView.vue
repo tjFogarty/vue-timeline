@@ -58,7 +58,7 @@ const props = defineProps({
   },
   headerHeight: {
     type: Number,
-    default: 50,
+    default: 80,
   }
 })
 

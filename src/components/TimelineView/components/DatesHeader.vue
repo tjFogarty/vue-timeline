@@ -1,20 +1,25 @@
 <template>
   <div class="date-list-container">
-    <ul class="date-list">
-      <li v-for="date in dates" :key="date.valueOf()" class="date-item">
-        <span class="date-day-letter">{{ date.toFormat('ccccc') }}</span>
-        <span class="date-day-number">
-          {{ date.toFormat('dd') }}
-        </span>
-      </li>
-    </ul>
+    <div v-for="month in Object.keys(groupedDatesByMonth)" :key="month" class="month">
+      <span class="month-name">
+        {{ month }}
+      </span>
+      <ul class="date-list">
+        <li v-for="date in groupedDatesByMonth[month]" :key="date.valueOf()" class="date-item">
+          <span class="date-day-letter">{{ date.toFormat('ccccc') }}</span>
+          <span class="date-day-number">
+            {{ date.toFormat('dd') }}
+          </span>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { useCurrentTimeline } from '../composables/useTimeline';
-const { dates, columnWidth, headerHeight } = useCurrentTimeline();
+const { columnWidth, headerHeight, resourceWidth, groupedDatesByMonth } = useCurrentTimeline();
 
 const columnWidthPx = computed(() => {
   return `${columnWidth}px`;
@@ -25,16 +30,28 @@ const headerHeightPx = computed(() => {
 </script>
 
 <style scoped>
+.date-list-container {
+  display: flex;
+  height: v-bind(headerHeightPx);
+}
+.month {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+.month-name {
+  position: sticky;
+  display: inline-block;
+  padding: 4px;
+  left: 50%;
+  font-weight: 600;
+}
 .date-list {
   position: sticky;
   top: 0;
-  z-index: 1;
   display: flex;
-  background-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(4px);
   list-style: none;
-  height: v-bind(headerHeightPx);
   overflow: hidden;
   margin: 0;
   padding: 0;
