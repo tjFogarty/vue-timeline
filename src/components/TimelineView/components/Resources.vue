@@ -15,7 +15,7 @@
 import { computed } from 'vue';
 import { useCurrentTimeline } from '../composables/useTimeline';
 
-const { resources, resourceWidth, resourceHeight, headerHeight } = useCurrentTimeline();
+const { timelineWidth, resources, resourceWidth, resourceHeight, headerHeight } = useCurrentTimeline();
 
 const resourceWidthPx = computed(() => {
   return `${resourceWidth}px`;
@@ -45,6 +45,7 @@ const headerHeightPx = computed(() => {
   display: flex;
   align-items: center;
   width: 100%;
+  z-index: 1;
   height: v-bind(headerHeightPx);
 }
 
@@ -55,6 +56,17 @@ const headerHeightPx = computed(() => {
 }
 
 .resource-item {
+  position: relative;
   height: v-bind(resourceHeightPx);
+}
+
+.resource-item:after {
+  content: '';
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 1px;
+  width: calc(v-bind(timelineWidth) * 1px);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 </style>

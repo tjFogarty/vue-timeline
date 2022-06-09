@@ -4,6 +4,8 @@
   </div>
   <div class="timeline-container" ref="container">
     <div class="timeline">
+      <div class="grid-bg"></div>
+
       <Resources>
         <template #resource="{ item }">
           <slot name="resource" v-bind="{ item }" />
@@ -46,7 +48,7 @@ const props = defineProps({
   },
   columnWidth: {
     type: Number,
-    default: 80,
+    default: 120,
   },
   resourceWidth: {
     type: Number,
@@ -84,6 +86,18 @@ const timelineHeightPx = computed(() => {
 .info {
   font-family: sans-serif;
   text-align: center;
+}
+
+.grid-bg {
+  position: absolute;
+  top: calc(v-bind(headerHeight) * 1px);
+  left: calc(v-bind(resourceWidth) * 1px);
+  background-size: calc(v-bind(columnWidth) * 1px);
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 .timeline-container {
