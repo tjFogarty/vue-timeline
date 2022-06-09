@@ -94,7 +94,7 @@ const timelineHeightPx = computed(() => {
   left: calc(v-bind(resourceWidth) * 1px);
   background-size: calc(v-bind(columnWidth) * 1px);
   background-image:
-    linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
   width: 100%;
   height: 100%;
   pointer-events: none;
