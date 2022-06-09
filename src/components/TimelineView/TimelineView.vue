@@ -1,11 +1,5 @@
 <template>
   <div class="info">
-    <p>Visible Dates: <strong>{{ startDate.toFormat('y-MM-dd') }} - {{ endDate.toFormat('y-MM-dd') }}</strong></p>
-    <p>
-      Mouse position: <strong>{{ hoveredDate && hoveredDate.toFormat('y-MM-dd') }}
-      {{ hoveredResourceId && `over resource id ${hoveredResourceId}` }}
-      </strong>
-    </p>
     <button type="button" @click="goToToday">Go to today</button>
   </div>
   <div class="timeline-container" ref="container">
@@ -68,7 +62,7 @@ const props = defineProps({
   }
 })
 
-const { timelineWidth, container, startDate, endDate, goToToday, hoveredDate, hoveredResourceId } = provideTimeline({
+const { timelineWidth, container, goToToday } = provideTimeline({
   resources: props.resources,
   events: props.events,
   columnWidth: props.columnWidth,
