@@ -36,7 +36,7 @@ export default function useTimeline({
   const groupedDatesByMonth = computed(() => {
     const groupedDates = {};
     dates.value.forEach(date => {
-      const month = date.toFormat('MMMM');
+      const month = date.toFormat('MMMM y');
       if (!groupedDates[month]) {
         groupedDates[month] = [];
       }
