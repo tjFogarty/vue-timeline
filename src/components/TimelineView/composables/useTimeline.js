@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref, computed, provide, shallowRef, inject } from 'vue';
+import { onMounted, onUnmounted, nextTick, computed, provide, shallowRef, inject } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
 import { DateTime } from 'luxon';
 
@@ -110,7 +110,7 @@ export default function useTimeline({
 
   function handleScroll(event) {
     const scrollLeftVal = event.target.scrollLeft;
-    const triggerArea = timelineWidth.value * 0.2;
+    const triggerArea = timelineWidth.value * 0.1;
     isMovingForwards.value = scrollLeftVal > scrollLeft.value;
     isMovingBackwards.value = scrollLeftVal < scrollLeft.value;
     scrollLeft.value = scrollLeftVal;
@@ -118,26 +118,30 @@ export default function useTimeline({
     // need to swap months in and out while preserving the scroll position
     if (isMovingForwards.value) {
       if (scrollLeftVal + event.target.offsetWidth >= timelineWidth.value - triggerArea) {
-        const previousStartMonthDayCount = daysInMonthCount(startDate.value.toJSDate());
+        const previousStartMonthDayCount = startDate.value.endOf('month').c.day;
         
-        startDate.value = startDate.value.plus({ month: 1 });
-        endDate.value = endDate.value.plus({ month: 1 });
+        startDate.value = startDate.value.plus({ month: 1 }).startOf('month');
+        endDate.value = endDate.value.plus({ month: 1 }).endOf('month');
 
-        window.requestAnimationFrame(() => {
-          container.value.scrollLeft = scrollLeft.value - (previousStartMonthDayCount * columnWidth);
+        const newScrollPosition = scrollLeft.value - (previousStartMonthDayCount * columnWidth);
+        
+        nextTick(() => {
+          container.value.scrollLeft = newScrollPosition;
         });
       }
     } else if (isMovingBackwards.value) {
       if (scrollLeftVal < triggerArea) {
-        const previousEndMonthDayCount = daysInMonthCount(endDate.value.toJSDate());
+        const previousEndMonthDayCount = endDate.value.endOf('month').c.day;
         
-        startDate.value = startDate.value.minus({ month: 1 });
-        endDate.value = endDate.value.minus({ month: 1 });
-        
-        window.requestAnimationFrame(() => {
-          container.value.scrollLeft = scrollLeft.value + (previousEndMonthDayCount * columnWidth) - columnWidth;
-        });
+        startDate.value = startDate.value.minus({ month: 1 }).startOf('month');
+        endDate.value = endDate.value.minus({ month: 1 }).endOf('month');
 
+        const diff = previousEndMonthDayCount - startDate.value.endOf('month').c.day;
+        const newScrollPosition = scrollLeft.value + ((previousEndMonthDayCount - diff) * columnWidth);
+        
+        nextTick(() => {
+          container.value.scrollLeft = newScrollPosition;
+        });
       }
     }
   }
@@ -150,10 +154,6 @@ export default function useTimeline({
   }
 
   const throttledHandleScroll = useThrottleFn(handleScroll, 100);
-
-  function daysInMonthCount(date) {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-  }
 
   function handleMouseMove(e) {
     const rect = container.value.getBoundingClientRect();
