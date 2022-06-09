@@ -32,13 +32,15 @@ const headerHeightPx = computed(() => {
 <style scoped>
 .date-list-container {
   display: flex;
+  position: sticky;
+  z-index: 1;
+  top: 0;
   height: v-bind(headerHeightPx);
 }
 .month {
   width: 100%;
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(4px);
-  z-index: 1;
 }
 .month-name {
   position: sticky;
@@ -48,8 +50,6 @@ const headerHeightPx = computed(() => {
   font-weight: 600;
 }
 .date-list {
-  position: sticky;
-  top: 0;
   display: flex;
   list-style: none;
   overflow: hidden;
