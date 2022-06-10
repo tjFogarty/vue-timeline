@@ -157,11 +157,15 @@ export default function useTimeline({
     }
   }
 
-  function goToToday() {
+  function goToToday(useSmoothScroll = true) {
     startDate.value = startOfLastMonth;
     endDate.value = endOfNextMonth;
-    container.value.scrollLeft = todayPosition.value * columnWidth;
-    container.value.scrollTop = 0;
+
+    container.value.scrollTo({
+      top: 0,
+      left: todayPosition.value * columnWidth,
+      behavior: useSmoothScroll ? 'smooth' : 'instant',
+    });
   }
 
   const throttledHandleScroll = useThrottleFn(handleScroll, 100);
@@ -189,7 +193,7 @@ export default function useTimeline({
     container.value.addEventListener('mousemove', throttledHandleMouseMove, { passive: true });
     container.value.addEventListener('scroll', throttledHandleScroll, { passive: true });
     container.value.addEventListener('dragover', handleDragOver);
-    goToToday();
+    goToToday(false);
   });
 
   onUnmounted(() => {
