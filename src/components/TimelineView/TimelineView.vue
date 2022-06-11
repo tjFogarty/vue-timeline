@@ -84,7 +84,6 @@ const timelineHeightPx = computed(() => {
 });
 
 function handleTimelineClick() {
-  console.log(hoveredResourceId.value)
   emit('create-event', {
     startDate: hoveredDate.value,
     endDate: hoveredDate.value,
