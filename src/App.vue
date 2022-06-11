@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TimelineView :resources="resources" :events="events">
+    <TimelineView :resources="resources" :events="events" @create-event="handleCreateEvent">
       <template #resource="{ item }">
         <div class="custom-resource">ID {{ item.id }}: {{ item.name }}</div>
       </template>
@@ -22,6 +22,7 @@
  * It's possible, then, to place anything anywhere on the grid. 
  */
 import { DateTime } from 'luxon';
+import { ref } from 'vue';
 import TimelineView from './components/TimelineView/TimelineView.vue';
 
 const today = new Date();
@@ -33,11 +34,22 @@ const resources = Array.from({ length: 30 }).map((_, i) => {
   }
 });
 
-const events = [
+const events = ref([
   { id: 1, name: 'Meeting', type: 'event', startDate: new DateTime(today).plus({ days: 1 }).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'), resourceId: 5 },
-  { id: 4, name: 'Design Spec', type: 'task', startDate: new DateTime(today).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'), resourceId: 2 },
-  { id: 2, name: 'Something else', type: 'task', startDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 4 }).toFormat('y-MM-dd'), resourceId: 6 },
-];
+  { id: 2, name: 'Design Spec', type: 'task', startDate: new DateTime(today).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'), resourceId: 2 },
+  { id: 3, name: 'Something else', type: 'task', startDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 4 }).toFormat('y-MM-dd'), resourceId: 6 },
+]);
+
+function handleCreateEvent(newEvent) {
+  events.value.push({
+    id: events.value.length + 1,
+    name: 'New Event',
+    type: 'event',
+    startDate: newEvent.startDate.toFormat('y-MM-dd'),
+    endDate: newEvent.endDate.toFormat('y-MM-dd'),
+    resourceId: newEvent.resourceId,
+  });
+}
 </script>
 
 <style scoped>

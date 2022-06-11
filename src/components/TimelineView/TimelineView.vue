@@ -3,7 +3,7 @@
     <button type="button" @click="goToToday">Go to today</button>
   </div>
   <div class="timeline-container" ref="container">
-    <div class="timeline">
+    <div class="timeline" @click="handleTimelineClick">
       <div class="grid-bg"></div>
 
       <Resources>
@@ -62,9 +62,11 @@ const props = defineProps({
     type: Number,
     default: 80,
   }
-})
+});
 
-const { timelineWidth, container, goToToday } = provideTimeline({
+const emit = defineEmits(['create-event']);
+
+const { timelineWidth, container, goToToday, hoveredResourceId, hoveredDate } = provideTimeline({
   resources: props.resources,
   events: props.events,
   columnWidth: props.columnWidth,
@@ -80,6 +82,15 @@ const timelineWidthPx = computed(() => {
 const timelineHeightPx = computed(() => {
   return `${props.visibleResources * props.resourceHeight + props.headerHeight}px`;
 });
+
+function handleTimelineClick() {
+  console.log(hoveredResourceId.value)
+  emit('create-event', {
+    startDate: hoveredDate.value,
+    endDate: hoveredDate.value,
+    resourceId: hoveredResourceId.value,
+  });
+}
 </script>
 
 <style scoped>

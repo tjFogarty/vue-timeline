@@ -173,9 +173,9 @@ export default function useTimeline({
   function handleMouseMove(e) {
     const rect = container.value.getBoundingClientRect();
     const x = e.pageX + container.value.scrollLeft - rect.left;
-    const y = e.pageY + container.value.scrollTop - rect.top;
+    const y = e.pageY + container.value.scrollTop - rect.top - headerHeight;
     const topPos = y - (y % resourceHeight);
-    const resourceIndex = (topPos / resourceHeight) - 1;
+    const resourceIndex = (topPos / resourceHeight);
     const dateIndex = Math.floor(((x - resourceWidth) / columnWidth));
 
     hoveredResourceId.value = resources[resourceIndex]?.id;
