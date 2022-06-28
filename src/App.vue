@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TimelineView :resources="resources" :events="events" @create-event="handleCreateEvent">
+    <TimelineView :resources="resources" :events="events" @create-event="handleCreateEvent" @date-change="handleDateChange">
       <template #resource="{ item }">
         <div class="custom-resource">ID {{ item.id }}: {{ item.name }}</div>
       </template>
@@ -49,6 +49,10 @@ function handleCreateEvent(newEvent) {
     endDate: newEvent.endDate.toFormat('y-MM-dd'),
     resourceId: newEvent.resourceId,
   });
+}
+
+function handleDateChange({ startDate, endDate }) {
+  console.log({ startDate, endDate })
 }
 </script>
 

@@ -3,7 +3,7 @@
     <button type="button" @click="goToToday">Go to today</button>
   </div>
   <div class="timeline-container" ref="container">
-    <div class="timeline" @click="handleTimelineClick">
+    <div class="timeline" @click="handleTimelineClick" ref="timelineEl">
       <div class="grid-bg"></div>
 
       <Resources>
@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { provideTimeline } from './composables/useTimeline';
 import DatesHeader from './components/DatesHeader.vue';
 import Resources from './components/Resources.vue';
@@ -64,9 +64,11 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['create-event']);
+const timelineEl = ref(null);
 
-const { timelineWidth, container, goToToday, hoveredResourceId, hoveredDate } = provideTimeline({
+const emit = defineEmits(['create-event', 'date-change']);
+
+const { timelineWidth, container, goToToday, hoveredResourceId, hoveredDate, startDate, endDate } = provideTimeline({
   resources: props.resources,
   events: props.events,
   columnWidth: props.columnWidth,
@@ -83,7 +85,16 @@ const timelineHeightPx = computed(() => {
   return `${props.visibleResources * props.resourceHeight + props.headerHeight}px`;
 });
 
-function handleTimelineClick() {
+watch([startDate, endDate], ([newStart, newEnd]) => {
+  emit('date-change', {
+    startDate: newStart,
+    endDate: newEnd,
+  });
+});
+
+function handleTimelineClick(e) {
+  if (e.target !== timelineEl.value) return;
+
   emit('create-event', {
     startDate: hoveredDate.value,
     endDate: hoveredDate.value,

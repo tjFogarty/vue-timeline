@@ -68,5 +68,6 @@ const headerHeightPx = computed(() => {
   height: 1px;
   width: calc(v-bind(timelineWidth) * 1px);
   background-color: rgba(0, 0, 0, 0.05);
+  pointer-events: none;
 }
 </style>
