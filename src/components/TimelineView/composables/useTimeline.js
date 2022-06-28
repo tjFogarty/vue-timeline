@@ -22,6 +22,7 @@ export default function useTimeline({
   const hoveredDate = shallowRef(null);
   const startDate = shallowRef(startOfLastMonth);
   const endDate = shallowRef(endOfNextMonth);
+  const isMoving = computed(() => isMovingForwards.value || isMovingBackwards.value);
   const dates = computed(() => {
     let start = new DateTime(startDate.value);
     const dates = [];
@@ -182,7 +183,7 @@ export default function useTimeline({
     hoveredDate.value = dates.value[dateIndex];
   }
 
-  const throttledHandleMouseMove = useThrottleFn(handleMouseMove, 100);
+  const throttledHandleMouseMove = useThrottleFn(handleMouseMove, 300);
 
   // this will make the `dragend` listener fire immediately
   function handleDragOver(e) {
