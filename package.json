@@ -1,5 +1,5 @@
 {
-  "name": "workload-v3",
+  "name": "vue-timeline",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -8,12 +8,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vueuse/core": "^8.7.5",
-    "luxon": "^2.4.0",
+    "@vueuse/core": "^9.0.2",
+    "luxon": "^3.0.1",
     "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.3.3",
-    "vite": "^2.9.13"
+    "@vitejs/plugin-vue": "^3.0.1",
+    "vite": "^3.0.4"
   }
 }
