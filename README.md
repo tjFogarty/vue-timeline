@@ -1,7 +1,7 @@
-# Vue 3 + Vite
+# Vue Timeline
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+[Demo](https://timeline.tj.ie/)
 
-## Recommended IDE Setup
+An infinite scroll timeline component written in Vue.
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+Just something I'm hacking on in my spare time for a bit of fun, as it's difficult to find a component like this in the wild.
