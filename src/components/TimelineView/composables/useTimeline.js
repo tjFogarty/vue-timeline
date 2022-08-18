@@ -183,7 +183,7 @@ export default function useTimeline({
     hoveredDate.value = dates.value[dateIndex];
   }
 
-  const throttledHandleMouseMove = useThrottleFn(handleMouseMove, 300);
+  const throttledHandleMouseMove = useThrottleFn(handleMouseMove, 100);
 
   // this will make the `dragend` listener fire immediately
   function handleDragOver(e) {

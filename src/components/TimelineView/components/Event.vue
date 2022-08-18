@@ -1,5 +1,7 @@
 <template>
-  <div tabindex="-1" class="event" :style="positionStyles" ref="target" @mousedown.prevent="handleStartDrag" @mouseup="handleStopDrag">
+  <div tabindex="-1" class="event" :style="positionStyles" ref="target" @mousedown.prevent="handleStartDrag" @mouseup="handleStopDrag" :class="{
+    'is-dragging': isDragging
+  }">
     <slot v-if="targetIsVisible" name="event" v-bind="{ item: data }">{{ data.name }}</slot>
   </div>
 </template>
@@ -71,5 +73,10 @@ function handleStopDrag(e) {
   transform: var(--transform);
   width: var(--width);
   transition: transform ease 0.1s;
+  cursor: grab;
+}
+
+.event.is-dragging {
+  cursor: grabbing;
 }
 </style>
