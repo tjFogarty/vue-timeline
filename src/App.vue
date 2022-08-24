@@ -38,6 +38,7 @@ const events = ref([
   { id: 1, name: 'Meeting', type: 'event', startDate: new DateTime(today).plus({ days: 1 }).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'), resourceId: 5 },
   { id: 2, name: 'Design Spec', type: 'task', startDate: new DateTime(today).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'), resourceId: 2 },
   { id: 3, name: 'Something else', type: 'task', startDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 4 }).toFormat('y-MM-dd'), resourceId: 6 },
+  { id: 4, name: 'Another task', type: 'task', startDate: new DateTime(today).plus({ days: 3 }).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'), resourceId: 6 },
 ]);
 
 function handleCreateEvent(newEvent) {

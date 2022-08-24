@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, nextTick, computed, provide, shallowRef, inject } from 'vue';
+import { onMounted, onUnmounted, nextTick, computed, provide, shallowRef, ref, inject } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
 import { DateTime } from 'luxon';
 
@@ -22,6 +22,7 @@ export default function useTimeline({
   const hoveredDate = shallowRef(null);
   const startDate = shallowRef(startOfLastMonth);
   const endDate = shallowRef(endOfNextMonth);
+  const resourcePositions = ref({});
   const isMoving = computed(() => isMovingForwards.value || isMovingBackwards.value);
   const dates = computed(() => {
     let start = new DateTime(startDate.value);
@@ -54,15 +55,6 @@ export default function useTimeline({
 
     return positions;
   });
-  const resourcePositions = computed(() => {
-    const positions = {};
-
-    resources.forEach((resource, index) => {
-      positions[resource.id] = headerHeight + (index * resourceHeight);
-    });
-
-    return positions;
-  });
   const timelineWidth = computed(() => {
     return (dates.value.length * columnWidth) + resourceWidth;
   });
@@ -84,10 +76,49 @@ export default function useTimeline({
 
     return weekends;
   });
+  const eventsGroupedByResource = computed(() => {
+    const grouped = {};
+
+    resources.forEach((r) => {
+      const resourceEvents = events.filter((e) => e.resourceId === r.id).sort((a, b) => {
+        return a.startDate - b.startDate;
+      });
+
+      if (resourceEvents.length) {
+        grouped[r.id] = resourceEvents;
+      }
+    });
+
+    return grouped;
+  });
+  const overlaps = computed(() => {
+    const overlaps = {};
+    
+    Object.keys(eventsGroupedByResource.value).forEach((resourceId) => {
+      const events = eventsGroupedByResource.value[resourceId];
+      let overlapCount = 1;
+      overlaps[resourceId] = {};
+
+      for (let i = 1; i < events.length; i++) {
+        const eventA = events[i];
+        const eventB = events[i - 1];
+        
+        overlaps[resourceId][eventA.id] = {};
+
+        if (eventB.endDate > eventA.startDate) {
+          overlapCount += 1;
+          overlaps[resourceId][eventA.id].position = overlapCount;
+        }
+      }
+
+      overlaps[resourceId].overlapCount = overlapCount;
+    });
+
+    return overlaps;
+  });
   const eventPositions = computed(() => {
     const positions = {};
     events.forEach((event) => {
-      // find left pos based on date
       const start = DateTime.fromFormat(event.startDate, 'y-MM-dd');
       const end = DateTime.fromFormat(event.endDate, 'y-MM-dd');
       
@@ -98,8 +129,9 @@ export default function useTimeline({
       const dateIndex = dates.value.findIndex((d) => d.hasSame(start, 'day'));
       
       if (dateIndex !== -1) {
+        const overlapPosition = overlaps.value[event.resourceId][event.id]?.position || 1;
         const leftPos = datePositions.value[event.startDate];
-        const topPos = resourcePositions.value[event.resourceId];
+        const topPos = resourcePositions.value[event.resourceId] + ((overlapPosition - 1) * resourceHeight);
         const { days } = end.diff(start, 'days').toObject();
         
         positions[event.id] = {
@@ -190,6 +222,10 @@ export default function useTimeline({
     e.preventDefault();
   }
 
+  function setResourceTopPosition(id, top) {
+    resourcePositions.value[id] = top;
+  }
+
   onMounted(() => {
     container.value.addEventListener('mousemove', throttledHandleMouseMove, { passive: true });
     container.value.addEventListener('scroll', throttledHandleScroll, { passive: true });
@@ -223,6 +259,8 @@ export default function useTimeline({
     headerHeight,
     hoveredDate,
     hoveredResourceId,
+    overlaps,
+    setResourceTopPosition,
   };
 }
 

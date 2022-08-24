@@ -1,6 +1,7 @@
 <template>
   <div tabindex="-1" class="event" :style="positionStyles" ref="target" @mousedown.prevent="handleStartDrag" @mouseup="handleStopDrag" :class="{
-    'is-dragging': isDragging
+    'is-dragging': isDragging,
+    'is-visible': targetIsVisible
   }">
     <slot v-if="targetIsVisible" name="event" v-bind="{ item: data }">{{ data.name }}</slot>
   </div>
@@ -72,8 +73,13 @@ function handleStopDrag(e) {
   height: v-bind(resourceHeightPx);
   transform: var(--transform);
   width: var(--width);
-  transition: transform ease 0.1s;
   cursor: grab;
+  opacity: 0;
+  transition: transform ease 0.1s, opacity ease 0.2s;
+}
+
+.event.is-visible {
+  opacity: 1;
 }
 
 .event.is-dragging {
