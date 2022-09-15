@@ -1,12 +1,10 @@
 <template>
-<li ref="el">
+<li class="resource-item">
   <slot />
 </li>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useMutationObserver } from '@vueuse/core';
 import { useCurrentTimeline } from '../composables/useTimeline';
 
 const props = defineProps({
@@ -16,18 +14,13 @@ const props = defineProps({
   }
 })
 
-const { setResourceTopPosition } = useCurrentTimeline();
-const el = ref(null);
-
-function saveTopPosition() {
-  setResourceTopPosition(props.resourceId, el.value.offsetTop);
-}
-
-onMounted(() => {
-  saveTopPosition();
-  useMutationObserver(el, () => {
-    saveTopPosition();
-  }, { attributes: true });
-})
-
+const { resPos } = useCurrentTimeline();
+const { height } = resPos.value[props.resourceId];
 </script>
+
+<style scoped>
+  .resource-item { 
+    left: 0;
+    height: calc(v-bind(height) * 1px);
+  }
+</style>

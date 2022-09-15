@@ -22,7 +22,7 @@ const props = defineProps({
 const target = ref(null);
 const isDragging = ref(false);
 const targetIsVisible = ref(false);
-const { eventPositions, resourceHeight, hoveredResourceId, hoveredDate, datePositions, resourcePositions, columnWidth } = useCurrentTimeline();
+const { eventPositions, resourceHeight, hoveredResourceId, hoveredDate, datePositions, columnWidth, resPos } = useCurrentTimeline();
 const dragOffset = ref(0);
 const resourceHeightPx = computed(() => {
   return `${resourceHeight}px`;
@@ -32,7 +32,7 @@ const draggingPos = computed(() => {
 
   return {
     x: datePositions.value[hoveredDate.value.toFormat('y-MM-dd')],
-    y: resourcePositions.value[hoveredResourceId.value],
+    y: resPos.value[hoveredResourceId.value].top,
   }
 });
 const position = computed(() => {

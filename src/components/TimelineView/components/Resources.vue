@@ -5,7 +5,7 @@
     </div>
     <ul class="resource-list">
       <ResourceItem v-for="resource in resources" :key="resource.id" class="resource-item" :resourceId="resource.id" :style="{
-        '--item-height': getResourceHeight(resource.id)
+        '--item-height': `${resPos[resource.id].height}`
       }">
         <slot name="resource" v-bind="{ item: resource }" />
       </ResourceItem>
@@ -18,15 +18,7 @@ import { computed } from 'vue';
 import ResourceItem from './ResourceItem.vue';
 import { useCurrentTimeline } from '../composables/useTimeline';
 
-const { overlaps, timelineWidth, resources, resourceWidth, resourceHeight, headerHeight } = useCurrentTimeline();
-
-function getResourceHeight(id) {
-  if (!overlaps.value[id]) {
-    return `${resourceHeight}px`;
-  }
-
-  return `${overlaps.value[id].overlapCount * resourceHeight}px`;
-}
+const { resPos, timelineWidth, resources, resourceWidth, resourceHeight, headerHeight } = useCurrentTimeline();
 
 const resourceWidthPx = computed(() => {
   return `${resourceWidth}px`;
@@ -65,7 +57,6 @@ const headerHeightPx = computed(() => {
 
 .resource-item {
   position: relative;
-  height: var(--item-height);
 }
 
 .resource-item:after {

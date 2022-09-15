@@ -22,8 +22,6 @@ export default function useTimeline({
   const hoveredDate = shallowRef(null);
   const startDate = shallowRef(startOfLastMonth);
   const endDate = shallowRef(endOfNextMonth);
-  const resourcePositions = ref({});
-  const isMoving = computed(() => isMovingForwards.value || isMovingBackwards.value);
   const dates = computed(() => {
     let start = new DateTime(startDate.value);
     const dates = [];
@@ -131,9 +129,13 @@ export default function useTimeline({
       if (dateIndex !== -1) {
         const overlapPosition = overlaps.value[event.resourceId][event.id]?.position || 1;
         const leftPos = datePositions.value[event.startDate];
-        const topPos = resourcePositions.value[event.resourceId] + ((overlapPosition - 1) * resourceHeight);
         const { days } = end.diff(start, 'days').toObject();
-        
+        let topPos = resPos.value[event.resourceId].top;
+
+        if (overlapPosition > 1) {
+          topPos += (overlapPosition - 1) * resourceHeight;
+        }
+
         positions[event.id] = {
           left: leftPos,
           top: topPos,
@@ -190,6 +192,24 @@ export default function useTimeline({
     }
   }
 
+  const resPos = computed(() => {
+    const heightPosMap = {};
+    let totalHeight = headerHeight;
+    resources.forEach((r) => {
+      const overlapCount = overlaps.value[r.id]?.overlapCount || 1;
+      const height = overlapCount * resourceHeight;
+
+      totalHeight += height;
+
+      heightPosMap[r.id] = {
+        top: totalHeight - (resourceHeight * overlapCount),
+        height
+      };
+    });
+
+    return heightPosMap;
+  });
+
   function goToToday(useSmoothScroll = true) {
     startDate.value = startOfLastMonth;
     endDate.value = endOfNextMonth;
@@ -222,10 +242,6 @@ export default function useTimeline({
     e.preventDefault();
   }
 
-  function setResourceTopPosition(id, top) {
-    resourcePositions.value[id] = top;
-  }
-
   onMounted(() => {
     container.value.addEventListener('mousemove', throttledHandleMouseMove, { passive: true });
     container.value.addEventListener('scroll', throttledHandleScroll, { passive: true });
@@ -249,7 +265,6 @@ export default function useTimeline({
     dates,
     groupedDatesByMonth,
     datePositions,
-    resourcePositions,
     weekendOccurences,
     eventPositions,
     timelineWidth,
@@ -259,8 +274,7 @@ export default function useTimeline({
     headerHeight,
     hoveredDate,
     hoveredResourceId,
-    overlaps,
-    setResourceTopPosition,
+    resPos,
   };
 }
 
