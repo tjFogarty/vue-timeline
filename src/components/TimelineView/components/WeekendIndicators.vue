@@ -1,7 +1,11 @@
 <template>
-  <div v-for="weekend in weekendOccurences" :key="weekend.date.valueOf()"
-    :style="`--transform: translateX(${weekend.leftPos}px);`" class="weekend-indicator" aria-hidden="true">
-  </div>
+  <div
+    v-for="weekend in weekendOccurences"
+    :key="weekend.date.valueOf()"
+    :style="`--transform: translateX(${weekend.leftPos}px);`"
+    class="weekend-indicator"
+    aria-hidden="true"
+  ></div>
 </template>
 
 <script setup>

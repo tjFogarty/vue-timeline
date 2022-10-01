@@ -1,9 +1,19 @@
 <template>
-  <div tabindex="-1" class="event" :style="positionStyles" ref="target" @mousedown.prevent="handleStartDrag" @mouseup="handleStopDrag" :class="{
-    'is-dragging': isDragging,
-    'is-visible': targetIsVisible
-  }">
-    <slot v-if="targetIsVisible" name="event" v-bind="{ item: data }">{{ data.name }}</slot>
+  <div
+    ref="target"
+    tabindex="-1"
+    class="event"
+    :style="positionStyles"
+    :class="{
+      'is-dragging': isDragging,
+      'is-visible': targetIsVisible,
+    }"
+    @mousedown.prevent="handleStartDrag"
+    @mouseup="handleStopDrag"
+  >
+    <slot v-if="targetIsVisible" name="event" v-bind="{ item: data }">{{
+      data.name
+    }}</slot>
   </div>
 </template>
 
@@ -22,7 +32,15 @@ const props = defineProps({
 const target = ref(null);
 const isDragging = ref(false);
 const targetIsVisible = ref(false);
-const { eventPositions, resourceHeight, hoveredResourceId, hoveredDate, datePositions, columnWidth, resPos } = useCurrentTimeline();
+const {
+  eventPositions,
+  resourceHeight,
+  hoveredResourceId,
+  hoveredDate,
+  datePositions,
+  columnWidth,
+  resPos,
+} = useCurrentTimeline();
 const dragOffset = ref(0);
 const resourceHeightPx = computed(() => {
   return `${resourceHeight}px`;
@@ -33,13 +51,15 @@ const draggingPos = computed(() => {
   return {
     x: datePositions.value[hoveredDate.value.toFormat('y-MM-dd')],
     y: resPos.value[hoveredResourceId.value].top,
-  }
+  };
 });
 const position = computed(() => {
   if (!eventPositions.value[props.data.id]) return '';
 
   const pos = eventPositions.value[props.data.id];
-  const x = draggingPos.value ? (draggingPos.value.x - dragOffset.value) : pos.left;
+  const x = draggingPos.value
+    ? draggingPos.value.x - dragOffset.value
+    : pos.left;
   const y = draggingPos.value ? draggingPos.value.y : pos.top;
 
   return { x, y, w: pos.width };
@@ -47,7 +67,7 @@ const position = computed(() => {
 const positionStyles = computed(() => {
   if (!position.value) return '';
 
-  const { w, x, y  } = position.value;
+  const { w, x, y } = position.value;
   return `--transform: translate(${x}px, ${y}px); --width: ${w}px`;
 });
 
@@ -61,7 +81,7 @@ function handleStartDrag(e) {
   isDragging.value = true;
 }
 
-function handleStopDrag(e) {
+function handleStopDrag() {
   isDragging.value = false;
 }
 </script>

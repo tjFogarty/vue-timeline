@@ -2,25 +2,25 @@
   <div class="info">
     <button type="button" @click="goToToday">Go to today</button>
   </div>
-  <div class="timeline-container" ref="container">
-    <div class="timeline" @click="handleTimelineClick" ref="timelineEl">
+  <div ref="container" class="timeline-container">
+    <div ref="timelineEl" class="timeline" @click="handleTimelineClick">
       <div class="grid-bg"></div>
 
-      <Resources>
+      <ResourceList>
         <template #resource="{ item }">
           <slot name="resource" v-bind="{ item }" />
         </template>
-      </Resources>
+      </ResourceList>
 
       <DatesHeader />
 
       <WeekendIndicators />
 
-      <Event v-for="event in events" :key="event.id" :data="event">
+      <EventItem v-for="event in events" :key="event.id" :data="event">
         <template #event="{ item }">
           <slot name="event" v-bind="{ item }" />
         </template>
-      </Event>
+      </EventItem>
     </div>
   </div>
 </template>
@@ -29,9 +29,9 @@
 import { computed, ref, watch } from 'vue';
 import { provideTimeline } from './composables/useTimeline';
 import DatesHeader from './components/DatesHeader.vue';
-import Resources from './components/Resources.vue';
+import ResourceList from './components/ResourceList.vue';
 import WeekendIndicators from './components/WeekendIndicators.vue';
-import Event from './components/Event.vue';
+import EventItem from './components/EventItem.vue';
 
 const props = defineProps({
   resources: {
@@ -44,7 +44,7 @@ const props = defineProps({
   },
   events: {
     type: Array,
-    default: () => ([]),
+    default: () => [],
   },
   columnWidth: {
     type: Number,
@@ -61,14 +61,22 @@ const props = defineProps({
   headerHeight: {
     type: Number,
     default: 80,
-  }
+  },
 });
 
 const timelineEl = ref(null);
 
 const emit = defineEmits(['create-event', 'date-change']);
 
-const { timelineWidth, container, goToToday, hoveredResourceId, hoveredDate, startDate, endDate } = provideTimeline({
+const {
+  timelineWidth,
+  container,
+  goToToday,
+  hoveredResourceId,
+  hoveredDate,
+  startDate,
+  endDate,
+} = provideTimeline({
   resources: props.resources,
   events: props.events,
   columnWidth: props.columnWidth,
@@ -79,10 +87,12 @@ const { timelineWidth, container, goToToday, hoveredResourceId, hoveredDate, sta
 
 const timelineWidthPx = computed(() => {
   return `${timelineWidth.value}px`;
-})
+});
 
 const timelineHeightPx = computed(() => {
-  return `${props.visibleResources * props.resourceHeight + props.headerHeight}px`;
+  return `${
+    props.visibleResources * props.resourceHeight + props.headerHeight
+  }px`;
 });
 
 watch([startDate, endDate], ([newStart, newEnd]) => {
@@ -114,8 +124,11 @@ function handleTimelineClick(e) {
   top: calc(v-bind(headerHeight) * 1px);
   left: calc(v-bind(resourceWidth) * 1px);
   background-size: calc(v-bind(columnWidth) * 1px);
-  background-image:
-    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px
+  );
   width: 100%;
   height: 100%;
   pointer-events: none;

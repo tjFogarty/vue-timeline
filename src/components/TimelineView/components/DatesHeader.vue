@@ -1,11 +1,19 @@
 <template>
   <div class="date-list-container">
-    <div v-for="month in Object.keys(groupedDatesByMonth)" :key="month" class="month">
+    <div
+      v-for="month in Object.keys(groupedDatesByMonth)"
+      :key="month"
+      class="month"
+    >
       <span class="month-name">
         {{ month }}
       </span>
       <ul class="date-list">
-        <li v-for="date in groupedDatesByMonth[month]" :key="date.valueOf()" class="date-item">
+        <li
+          v-for="date in groupedDatesByMonth[month]"
+          :key="date.valueOf()"
+          class="date-item"
+        >
           <span class="date-day-letter">{{ date.toFormat('ccccc') }}</span>
           <span class="date-day-number">
             {{ date.toFormat('dd') }}
@@ -19,7 +27,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useCurrentTimeline } from '../composables/useTimeline';
-const { columnWidth, headerHeight, resourceWidth, groupedDatesByMonth } = useCurrentTimeline();
+const { columnWidth, headerHeight, groupedDatesByMonth } = useCurrentTimeline();
 
 const columnWidthPx = computed(() => {
   return `${columnWidth}px`;

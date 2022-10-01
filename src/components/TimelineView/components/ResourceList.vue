@@ -1,12 +1,16 @@
 <template>
   <div class="resources">
-    <div class="resource-header">
-      Resources
-    </div>
+    <div class="resource-header">Resources</div>
     <ul class="resource-list">
-      <ResourceItem v-for="resource in resources" :key="resource.id" class="resource-item" :resourceId="resource.id" :style="{
-        '--item-height': `${resPos[resource.id].height}`
-      }">
+      <ResourceItem
+        v-for="resource in resources"
+        :key="resource.id"
+        class="resource-item"
+        :resource-id="resource.id"
+        :style="{
+          '--item-height': `${resPos[resource.id].height}`,
+        }"
+      >
         <slot name="resource" v-bind="{ item: resource }" />
       </ResourceItem>
     </ul>
@@ -18,7 +22,8 @@ import { computed } from 'vue';
 import ResourceItem from './ResourceItem.vue';
 import { useCurrentTimeline } from '../composables/useTimeline';
 
-const { resPos, timelineWidth, resources, resourceWidth, resourceHeight, headerHeight } = useCurrentTimeline();
+const { resPos, timelineWidth, resources, resourceWidth, headerHeight } =
+  useCurrentTimeline();
 
 const resourceWidthPx = computed(() => {
   return `${resourceWidth}px`;

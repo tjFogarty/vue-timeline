@@ -1,6 +1,11 @@
 <template>
   <div>
-    <TimelineView :resources="resources" :events="events" @create-event="handleCreateEvent" @date-change="handleDateChange">
+    <TimelineView
+      :resources="resources"
+      :events="events"
+      @create-event="handleCreateEvent"
+      @date-change="handleDateChange"
+    >
       <template #resource="{ item }">
         <div class="custom-resource">ID {{ item.id }}: {{ item.name }}</div>
       </template>
@@ -18,8 +23,8 @@
 /**
  * The concept of this timeline component is to have everything positioned
  * based on the provided dimensions.
- * 
- * It's possible, then, to place anything anywhere on the grid. 
+ *
+ * It's possible, then, to place anything anywhere on the grid.
  */
 import { DateTime } from 'luxon';
 import { ref } from 'vue';
@@ -31,14 +36,42 @@ const resources = Array.from({ length: 30 }).map((_, i) => {
   return {
     id: i + 1,
     name: 'Resource ' + (i + 1),
-  }
+  };
 });
 
 const events = ref([
-  { id: 1, name: 'Meeting', type: 'event', startDate: new DateTime(today).plus({ days: 1 }).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'), resourceId: 5 },
-  { id: 2, name: 'Design Spec', type: 'task', startDate: new DateTime(today).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'), resourceId: 2 },
-  { id: 3, name: 'Something else', type: 'task', startDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 4 }).toFormat('y-MM-dd'), resourceId: 6 },
-  { id: 4, name: 'Another task', type: 'task', startDate: new DateTime(today).plus({ days: 3 }).toFormat('y-MM-dd'), endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'), resourceId: 6 },
+  {
+    id: 1,
+    name: 'Meeting',
+    type: 'event',
+    startDate: new DateTime(today).plus({ days: 1 }).toFormat('y-MM-dd'),
+    endDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'),
+    resourceId: 5,
+  },
+  {
+    id: 2,
+    name: 'Design Spec',
+    type: 'task',
+    startDate: new DateTime(today).toFormat('y-MM-dd'),
+    endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'),
+    resourceId: 2,
+  },
+  {
+    id: 3,
+    name: 'Something else',
+    type: 'task',
+    startDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'),
+    endDate: new DateTime(today).plus({ days: 4 }).toFormat('y-MM-dd'),
+    resourceId: 6,
+  },
+  {
+    id: 4,
+    name: 'Another task',
+    type: 'task',
+    startDate: new DateTime(today).plus({ days: 3 }).toFormat('y-MM-dd'),
+    endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'),
+    resourceId: 6,
+  },
 ]);
 
 function handleCreateEvent(newEvent) {
@@ -53,7 +86,7 @@ function handleCreateEvent(newEvent) {
 }
 
 function handleDateChange({ startDate, endDate }) {
-  console.log({ startDate, endDate })
+  console.log({ startDate, endDate });
 }
 </script>
 
@@ -68,12 +101,12 @@ function handleDateChange({ startDate, endDate }) {
 }
 
 .custom-event.task {
-  background-color: burlywood;
+  background-color: #3ea1ff;
   color: white;
 }
 
 .custom-event.event {
-  background-color: gray;
+  background-color: #ff8686;
   color: white;
 }
 
