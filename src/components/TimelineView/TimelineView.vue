@@ -28,6 +28,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { provideTimeline } from './composables/useTimeline';
+import { provideMousePosition } from './composables/useMousePosition';
 import DatesHeader from './components/DatesHeader.vue';
 import ResourceList from './components/ResourceList.vue';
 import WeekendIndicators from './components/WeekendIndicators.vue';
@@ -76,6 +77,12 @@ const {
   hoveredDate,
   startDate,
   endDate,
+  resourceHeight,
+  headerHeight,
+  resourceWidth,
+  columnWidth,
+  resources,
+  dates,
 } = provideTimeline({
   resources: props.resources,
   events: props.events,
@@ -83,6 +90,16 @@ const {
   resourceWidth: props.resourceWidth,
   resourceHeight: props.resourceHeight,
   headerHeight: props.headerHeight,
+});
+
+provideMousePosition({
+  container,
+  resourceHeight,
+  headerHeight,
+  resourceWidth,
+  columnWidth,
+  resources,
+  dates,
 });
 
 const timelineWidthPx = computed(() => {

@@ -21,6 +21,7 @@
 import { ref, computed } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 import { useCurrentTimeline } from '../composables/useTimeline';
+import { useCurrentMousePosition } from '../composables/useMousePosition';
 
 const props = defineProps({
   data: {
@@ -32,15 +33,9 @@ const props = defineProps({
 const target = ref(null);
 const isDragging = ref(false);
 const targetIsVisible = ref(false);
-const {
-  eventPositions,
-  resourceHeight,
-  hoveredResourceId,
-  hoveredDate,
-  datePositions,
-  columnWidth,
-  resPos,
-} = useCurrentTimeline();
+const { hoveredDate, hoveredResourceId } = useCurrentMousePosition();
+const { eventPositions, resourceHeight, datePositions, columnWidth, resPos } =
+  useCurrentTimeline();
 const dragOffset = ref(0);
 const resourceHeightPx = computed(() => {
   return `${resourceHeight}px`;
