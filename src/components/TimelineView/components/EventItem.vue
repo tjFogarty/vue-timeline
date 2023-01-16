@@ -20,8 +20,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
-import { useCurrentTimeline } from '../composables/useTimeline';
 import { useCurrentMousePosition } from '../composables/useMousePosition';
+import { useTimelineStore } from '../store/useTimelineStore';
 
 const props = defineProps({
   data: {
@@ -34,24 +34,23 @@ const target = ref(null);
 const isDragging = ref(false);
 const targetIsVisible = ref(false);
 const { hoveredDate, hoveredResourceId } = useCurrentMousePosition();
-const { eventPositions, resourceHeight, datePositions, columnWidth, resPos } =
-  useCurrentTimeline();
+const timelineStore = useTimelineStore();
 const dragOffset = ref(0);
 const resourceHeightPx = computed(() => {
-  return `${resourceHeight}px`;
+  return `${timelineStore.resourceHeight}px`;
 });
 const draggingPos = computed(() => {
   if (!isDragging.value) return null;
 
   return {
-    x: datePositions.value[hoveredDate.value.toFormat('y-MM-dd')],
-    y: resPos.value[hoveredResourceId.value].top,
+    x: timelineStore.datePositions[hoveredDate.value.toFormat('y-MM-dd')],
+    y: timelineStore.resPos[hoveredResourceId.value].top,
   };
 });
 const position = computed(() => {
-  if (!eventPositions.value[props.data.id]) return '';
+  if (!timelineStore.eventPositions[props.data.id]) return '';
 
-  const pos = eventPositions.value[props.data.id];
+  const pos = timelineStore.eventPositions[props.data.id];
   const x = draggingPos.value
     ? draggingPos.value.x - dragOffset.value
     : pos.left;
@@ -71,7 +70,9 @@ useIntersectionObserver(target, ([{ isIntersecting }]) => {
 });
 
 function handleStartDrag(e) {
-  const colOffsetPos = parseInt(e.offsetX / columnWidth, 10) * columnWidth;
+  const colOffsetPos =
+    parseInt(e.offsetX / timelineStore.columnWidth, 10) *
+    timelineStore.columnWidth;
   dragOffset.value = colOffsetPos;
   isDragging.value = true;
 }

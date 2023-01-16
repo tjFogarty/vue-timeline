@@ -1,28 +1,28 @@
 import { ref, computed, onMounted, onUnmounted, inject, provide } from 'vue';
 import { useThrottleFn } from '@vueuse/core';
+import { useTimelineStore } from '../store/useTimelineStore';
 
-function useMousePosition({
-  container,
-  resourceHeight,
-  headerHeight,
-  resourceWidth,
-  columnWidth,
-  resources,
-  dates,
-}) {
+function useMousePosition({ container }) {
+  const timelineStore = useTimelineStore();
   const hoveredResourceId = ref(null);
   const hoveredDate = ref(null);
 
   function handleMouseMove(e) {
     const rect = container?.value.getBoundingClientRect();
     const x = e.pageX + container.value.scrollLeft - rect.left;
-    const y = e.pageY + container.value.scrollTop - rect.top - headerHeight;
-    const topPos = y - (y % resourceHeight);
-    const resourceIndex = topPos / resourceHeight;
-    const dateIndex = Math.floor((x - resourceWidth) / columnWidth);
+    const y =
+      e.pageY +
+      container.value.scrollTop -
+      rect.top -
+      timelineStore.headerHeight;
+    const topPos = y - (y % timelineStore.resourceHeight);
+    const resourceIndex = topPos / timelineStore.resourceHeight;
+    const dateIndex = Math.floor(
+      (x - timelineStore.resourceWidth) / timelineStore.columnWidth,
+    );
 
-    hoveredResourceId.value = resources[resourceIndex]?.id;
-    hoveredDate.value = dates.value[dateIndex];
+    hoveredResourceId.value = timelineStore.resources[resourceIndex]?.id;
+    hoveredDate.value = timelineStore.dates[dateIndex];
   }
 
   const throttledHandleMouseMove = useThrottleFn(handleMouseMove, 100);

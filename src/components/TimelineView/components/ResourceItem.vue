@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { useCurrentTimeline } from '../composables/useTimeline';
+import { useTimelineStore } from '../store/useTimelineStore';
 
 const props = defineProps({
   resourceId: {
@@ -14,8 +14,8 @@ const props = defineProps({
   },
 });
 
-const { resPos } = useCurrentTimeline();
-const { height } = resPos.value[props.resourceId];
+const timelineStore = useTimelineStore();
+const { height } = timelineStore.resPos[props.resourceId];
 </script>
 
 <style scoped>

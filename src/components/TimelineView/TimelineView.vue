@@ -27,6 +27,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { useTimelineStore } from './store/useTimelineStore';
 import { provideTimeline } from './composables/useTimeline';
 import { provideMousePosition } from './composables/useMousePosition';
 import DatesHeader from './components/DatesHeader.vue';
@@ -65,45 +66,33 @@ const props = defineProps({
   },
 });
 
+const timelineStore = useTimelineStore();
 const timelineEl = ref(null);
+
+watch(
+  () => props.events,
+  () => {
+    timelineStore.addEvents(props.events);
+  },
+  { immediate: true },
+);
+
+watch(
+  () => props.resources,
+  () => {
+    timelineStore.addResources(props.resources);
+  },
+  { immediate: true },
+);
 
 const emit = defineEmits(['create-event', 'date-change']);
 
-const {
-  timelineWidth,
-  container,
-  goToToday,
-  hoveredResourceId,
-  hoveredDate,
-  startDate,
-  endDate,
-  resourceHeight,
-  headerHeight,
-  resourceWidth,
-  columnWidth,
-  resources,
-  dates,
-} = provideTimeline({
-  resources: props.resources,
-  events: props.events,
-  columnWidth: props.columnWidth,
-  resourceWidth: props.resourceWidth,
-  resourceHeight: props.resourceHeight,
-  headerHeight: props.headerHeight,
-});
+const { container, goToToday } = provideTimeline();
 
-provideMousePosition({
-  container,
-  resourceHeight,
-  headerHeight,
-  resourceWidth,
-  columnWidth,
-  resources,
-  dates,
-});
+provideMousePosition({ container });
 
 const timelineWidthPx = computed(() => {
-  return `${timelineWidth.value}px`;
+  return `${timelineStore.timelineWidth}px`;
 });
 
 const timelineHeightPx = computed(() => {
@@ -112,21 +101,24 @@ const timelineHeightPx = computed(() => {
   }px`;
 });
 
-watch([startDate, endDate], ([newStart, newEnd]) => {
-  emit('date-change', {
-    startDate: newStart,
-    endDate: newEnd,
-  });
-});
+watch(
+  [timelineStore.startDate, timelineStore.endDate],
+  ([newStart, newEnd]) => {
+    emit('date-change', {
+      startDate: newStart,
+      endDate: newEnd,
+    });
+  },
+);
 
 function handleTimelineClick(e) {
   if (e.target !== timelineEl.value) return;
 
-  emit('create-event', {
-    startDate: hoveredDate.value,
-    endDate: hoveredDate.value,
-    resourceId: hoveredResourceId.value,
-  });
+  // emit('create-event', {
+  //   startDate: hoveredDate.value,
+  //   endDate: hoveredDate.value,
+  //   resourceId: hoveredResourceId.value,
+  // });
 }
 </script>
 

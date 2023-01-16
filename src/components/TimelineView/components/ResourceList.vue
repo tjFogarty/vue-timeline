@@ -20,10 +20,10 @@
 <script setup>
 import { computed } from 'vue';
 import ResourceItem from './ResourceItem.vue';
-import { useCurrentTimeline } from '../composables/useTimeline';
+import { useTimelineStore } from '../store/useTimelineStore';
 
 const { resPos, timelineWidth, resources, resourceWidth, headerHeight } =
-  useCurrentTimeline();
+  useTimelineStore();
 
 const resourceWidthPx = computed(() => {
   return `${resourceWidth}px`;

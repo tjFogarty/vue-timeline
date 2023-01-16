@@ -1,7 +1,7 @@
 <template>
   <div class="date-list-container">
     <div
-      v-for="month in Object.keys(groupedDatesByMonth)"
+      v-for="month in Object.keys(timelineStore.groupedDatesByMonth)"
       :key="month"
       class="month"
     >
@@ -10,7 +10,7 @@
       </span>
       <ul class="date-list">
         <li
-          v-for="date in groupedDatesByMonth[month]"
+          v-for="date in timelineStore.groupedDatesByMonth[month]"
           :key="date.valueOf()"
           class="date-item"
         >
@@ -26,14 +26,15 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useCurrentTimeline } from '../composables/useTimeline';
-const { columnWidth, headerHeight, groupedDatesByMonth } = useCurrentTimeline();
+import { useTimelineStore } from '../store/useTimelineStore';
+
+const timelineStore = useTimelineStore();
 
 const columnWidthPx = computed(() => {
-  return `${columnWidth}px`;
+  return `${timelineStore.columnWidth}px`;
 });
 const headerHeightPx = computed(() => {
-  return `${headerHeight}px`;
+  return `${timelineStore.headerHeight}px`;
 });
 </script>
 
