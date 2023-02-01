@@ -89,7 +89,7 @@ const emit = defineEmits(['create-event', 'date-change']);
 
 const { container, goToToday } = provideTimeline();
 
-provideMousePosition({ container });
+const { hoveredDate, hoveredResourceId } = provideMousePosition({ container });
 
 const timelineWidthPx = computed(() => {
   return `${timelineStore.timelineWidth}px`;
@@ -114,11 +114,11 @@ watch(
 function handleTimelineClick(e) {
   if (e.target !== timelineEl.value) return;
 
-  // emit('create-event', {
-  //   startDate: hoveredDate.value,
-  //   endDate: hoveredDate.value,
-  //   resourceId: hoveredResourceId.value,
-  // });
+  emit('create-event', {
+    startDate: hoveredDate.value,
+    endDate: hoveredDate.value,
+    resourceId: hoveredResourceId.value,
+  });
 }
 </script>
 

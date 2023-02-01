@@ -6,7 +6,6 @@ import {
   shallowRef,
   inject,
 } from 'vue';
-import { useThrottleFn } from '@vueuse/core';
 import { useTimelineStore } from '../store/useTimelineStore';
 
 function useTimeline() {
@@ -32,8 +31,7 @@ function useTimeline() {
         const previousStartMonthDayCount =
           timelineStore.startDate.endOf('month').c.day;
 
-        timelineStore.nextStartDate();
-        timelineStore.nextEndDate();
+        timelineStore.moveDatesForward();
 
         const newScrollPosition =
           scrollLeft.value -
@@ -48,8 +46,7 @@ function useTimeline() {
         const previousEndMonthDayCount =
           timelineStore.endDate.endOf('month').c.day;
 
-        timelineStore.prevStartDate();
-        timelineStore.prevEndDate();
+        timelineStore.moveDatesBack();
 
         const diff =
           previousEndMonthDayCount -
@@ -75,15 +72,13 @@ function useTimeline() {
     });
   }
 
-  const throttledHandleScroll = useThrottleFn(handleScroll, 100);
-
   // this will make the `dragend` listener fire immediately
   function handleDragOver(e) {
     e.preventDefault();
   }
 
   onMounted(() => {
-    container.value.addEventListener('scroll', throttledHandleScroll, {
+    container.value.addEventListener('scroll', handleScroll, {
       passive: true,
     });
     container.value.addEventListener('dragover', handleDragOver);
@@ -91,7 +86,7 @@ function useTimeline() {
   });
 
   onUnmounted(() => {
-    container.value.removeEventListener('scroll', throttledHandleScroll);
+    container.value.removeEventListener('scroll', handleScroll);
     container.value.removeEventListener('dragover', handleDragOver);
   });
 

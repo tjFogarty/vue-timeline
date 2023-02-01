@@ -122,6 +122,18 @@ export const useTimelineStore = defineStore('timeline', {
 
       return overlaps;
     },
+
+    height() {
+      let totalHeight = 0;
+
+      this.resources.forEach((resource) => {
+        const overlapCount = this.overlaps[resource.id]?.overlapCount || 1;
+        totalHeight += overlapCount * this.resourceHeight;
+      });
+
+      return totalHeight;
+    },
+
     resPos() {
       const heightPosMap = {};
       let totalHeight = this.headerHeight;
@@ -139,6 +151,7 @@ export const useTimelineStore = defineStore('timeline', {
 
       return heightPosMap;
     },
+
     eventPositions() {
       const positions = {};
       this.events.forEach((event) => {
@@ -172,6 +185,7 @@ export const useTimelineStore = defineStore('timeline', {
 
       return positions;
     },
+
     todayPosition() {
       const now = new DateTime(today);
 
@@ -197,19 +211,13 @@ export const useTimelineStore = defineStore('timeline', {
       this.resources.push(resource);
     },
 
-    nextStartDate() {
+    moveDatesForward() {
       this.startDate = this.startDate.plus({ month: 1 }).startOf('month');
-    },
-
-    nextEndDate() {
       this.endDate = this.endDate.plus({ month: 1 }).endOf('month');
     },
 
-    prevStartDate() {
+    moveDatesBack() {
       this.startDate = this.startDate.minus({ month: 1 }).startOf('month');
-    },
-
-    prevEndDate() {
       this.endDate = this.endDate.minus({ month: 1 }).endOf('month');
     },
 
