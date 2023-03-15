@@ -10,11 +10,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useIntersectionObserver } from '@vueuse/core';
-import { useCurrentMousePosition } from '../composables/useMousePosition';
+import { computed } from 'vue';
 import { useTimelineStore } from '../store/useTimelineStore';
-import { DATE_FORMAT } from '../constants';
 
 const props = defineProps({
   resourceId: {
@@ -24,6 +21,9 @@ const props = defineProps({
 });
 
 const timelineStore = useTimelineStore();
+const resource = computed(() => {
+  return timelineStore.resources.find((resource) => parseInt(resource.id, 10) === parseInt(props.resourceId, 10));
+});
 
 const resourceHeightPx = computed(() => {
   return `${timelineStore.rowHeight}px`;
@@ -38,11 +38,16 @@ const position = computed(() => {
 
   return { x, y, w: pos.width };
 });
+
 const positionStyles = computed(() => {
   if (!position.value) return '';
 
   const { w, x, y } = position.value;
   return `--transform: translate(${x}px, ${y}px); --width: ${w}px`;
+});
+
+const resourceColour = computed(() => {
+  return resource.value.colour;
 });
 </script>
 
@@ -57,7 +62,7 @@ const positionStyles = computed(() => {
 }
 
 .timeline-fill {
-  background-color: #5c9dff;
+  background-color: v-bind(resourceColour);
   width: 100%;
   height: 100%;
   border-radius: 20px;

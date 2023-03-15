@@ -13,6 +13,7 @@ interface EventItem {
 interface ResourceItem {
   id: number;
   name: string;
+  colour: string;
 }
 
 interface RootState {
