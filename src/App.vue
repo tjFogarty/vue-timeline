@@ -1,120 +1,27 @@
 <template>
-  <div>
-    <TimelineView
-      :resources="resources"
-      :events="events"
-      @create-event="handleCreateEvent"
-      @date-change="handleDateChange"
-    >
-      <template #resource="{ item }">
-        <div class="custom-resource">ID {{ item.id }}: {{ item.name }}</div>
-      </template>
+  <div class="timeline-preview">
+    <ProjectTimeline />
 
-      <template #event="{ item }">
-        <div class="custom-event" :class="item.type">
-          {{ item.type }}: {{ item.name }}
-        </div>
-      </template>
-    </TimelineView>
+    <div class="gh-link">
+      <a href="https://github.com/tjFogarty/vue-timeline" target="_blank"
+        >View on GitHub</a
+      >
+    </div>
   </div>
 </template>
 
 <script setup>
-/**
- * The concept of this timeline component is to have everything positioned
- * based on the provided dimensions.
- *
- * It's possible, then, to place anything anywhere on the grid.
- */
-import { DateTime } from 'luxon';
-import { ref } from 'vue';
-import TimelineView from './components/TimelineView/TimelineView.vue';
-
-const today = new Date();
-
-const resources = Array.from({ length: 30 }).map((_, i) => {
-  return {
-    id: i + 1,
-    name: 'Resource ' + (i + 1),
-  };
-});
-
-const events = ref([
-  {
-    id: 1,
-    name: 'Meeting',
-    type: 'event',
-    startDate: new DateTime(today).plus({ days: 1 }).toFormat('y-MM-dd'),
-    endDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'),
-    resourceId: 5,
-  },
-  {
-    id: 2,
-    name: 'Design Spec',
-    type: 'task',
-    startDate: new DateTime(today).toFormat('y-MM-dd'),
-    endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'),
-    resourceId: 2,
-  },
-  {
-    id: 3,
-    name: 'Something else',
-    type: 'task',
-    startDate: new DateTime(today).plus({ days: 2 }).toFormat('y-MM-dd'),
-    endDate: new DateTime(today).plus({ days: 4 }).toFormat('y-MM-dd'),
-    resourceId: 6,
-  },
-  {
-    id: 4,
-    name: 'Another task',
-    type: 'task',
-    startDate: new DateTime(today).plus({ days: 3 }).toFormat('y-MM-dd'),
-    endDate: new DateTime(today).plus({ days: 5 }).toFormat('y-MM-dd'),
-    resourceId: 6,
-  },
-]);
-
-function handleCreateEvent(newEvent) {
-  events.value.push({
-    id: events.value.length + 1,
-    name: 'New Event',
-    type: 'event',
-    startDate: newEvent.startDate.toFormat('y-MM-dd'),
-    endDate: newEvent.endDate.toFormat('y-MM-dd'),
-    resourceId: newEvent.resourceId,
-  });
-}
-
-function handleDateChange({ startDate, endDate }) {
-  console.log({ startDate, endDate });
-}
+import ProjectTimeline from './components/ProjectTimeline.vue';
 </script>
 
 <style scoped>
-.custom-event {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  border-radius: 5px;
+.timeline-preview {
+  font-family: sans-serif;
 }
 
-.custom-event.task {
-  background-color: #3ea1ff;
-  color: white;
-}
-
-.custom-event.event {
-  background-color: #ff8686;
-  color: white;
-}
-
-.custom-resource {
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  border-bottom: 1px solid #ccc;
-  height: 100%;
+.gh-link {
+  font-family: sans-serif;
+  text-align: center;
+  margin: 1rem 0;
 }
 </style>

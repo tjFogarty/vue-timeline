@@ -1,22 +1,28 @@
-import { ref, computed, onMounted, onUnmounted, inject, provide } from 'vue';
-import { useThrottleFn } from '@vueuse/core';
+import type { Ref } from 'vue';
+import { DateTime } from 'luxon';
+import { ref, computed, inject, provide } from 'vue';
+import { useThrottleFn, useEventListener } from '@vueuse/core';
 import { useTimelineStore } from '../store/useTimelineStore';
 
-function useMousePosition({ container }) {
+interface UseMousePositionOptions {
+  container: Ref<HTMLElement>;
+}
+
+function useMousePosition({ container }: UseMousePositionOptions) {
   const timelineStore = useTimelineStore();
-  const hoveredResourceId = ref(null);
-  const hoveredDate = ref(null);
+  const hoveredResourceId = ref<Number | null>(null);
+  const hoveredDate = ref<DateTime | null>(null);
 
   function handleMouseMove(e) {
-    const rect = container?.value.getBoundingClientRect();
+    const rect = container.value.getBoundingClientRect();
     const x = e.pageX + container.value.scrollLeft - rect.left;
     const y =
       e.pageY +
       container.value.scrollTop -
       rect.top -
       timelineStore.headerHeight;
-    const topPos = y - (y % timelineStore.resourceHeight);
-    const resourceIndex = topPos / timelineStore.resourceHeight;
+    const topPos = y - (y % timelineStore.rowHeight);
+    const resourceIndex = topPos / timelineStore.rowHeight;
     const dateIndex = Math.floor(
       (x - timelineStore.resourceWidth) / timelineStore.columnWidth,
     );
@@ -27,15 +33,7 @@ function useMousePosition({ container }) {
 
   const throttledHandleMouseMove = useThrottleFn(handleMouseMove, 100);
 
-  onMounted(() => {
-    container.value.addEventListener('mousemove', throttledHandleMouseMove, {
-      passive: true,
-    });
-  });
-
-  onUnmounted(() => {
-    container.value.removeEventListener('mousemove', throttledHandleMouseMove);
-  });
+  useEventListener(container, 'mousemove', throttledHandleMouseMove);
 
   return {
     hoveredDate: computed(() => hoveredDate.value),

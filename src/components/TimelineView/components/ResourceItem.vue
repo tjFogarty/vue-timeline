@@ -7,20 +7,24 @@
 <script setup>
 import { useTimelineStore } from '../store/useTimelineStore';
 
-const props = defineProps({
-  resourceId: {
-    type: Number,
-    required: true,
-  },
-});
-
-const timelineStore = useTimelineStore();
-const { height } = timelineStore.resPos[props.resourceId];
+const { rowHeight, timelineWidth } = useTimelineStore();
 </script>
 
 <style scoped>
 .resource-item {
-  left: 0;
-  height: calc(v-bind(height) * 1px);
+  position: relative;
+  inset-inline-start: 0;
+  height: calc(v-bind(rowHeight) * 1px);
+}
+
+.resource-item:after {
+  content: '';
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 1px;
+  width: calc(v-bind(timelineWidth) * 1px);
+  background-color: rgba(0, 0, 0, 0.05);
+  pointer-events: none;
 }
 </style>

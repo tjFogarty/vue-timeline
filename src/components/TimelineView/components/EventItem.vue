@@ -22,6 +22,7 @@ import { ref, computed } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 import { useCurrentMousePosition } from '../composables/useMousePosition';
 import { useTimelineStore } from '../store/useTimelineStore';
+import { DATE_FORMAT } from '../constants';
 
 const props = defineProps({
   data: {
@@ -37,13 +38,13 @@ const { hoveredDate, hoveredResourceId } = useCurrentMousePosition();
 const timelineStore = useTimelineStore();
 const dragOffset = ref(0);
 const resourceHeightPx = computed(() => {
-  return `${timelineStore.resourceHeight}px`;
+  return `${timelineStore.rowHeight}px`;
 });
 const draggingPos = computed(() => {
   if (!isDragging.value) return null;
 
   return {
-    x: timelineStore.datePositions[hoveredDate.value.toFormat('y-MM-dd')],
+    x: timelineStore.datePositions[hoveredDate.value.toFormat(DATE_FORMAT)],
     y: timelineStore.resPos[hoveredResourceId.value].top,
   };
 });

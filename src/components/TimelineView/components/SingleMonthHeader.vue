@@ -1,10 +1,5 @@
 <template>
-  <div class="date-list-container">
-    <div
-      v-for="month in Object.keys(timelineStore.groupedDatesByMonth)"
-      :key="month"
-      class="month"
-    >
+  <div class="month">
       <span class="month-name">
         {{ month }}
       </span>
@@ -21,43 +16,43 @@
         </li>
       </ul>
     </div>
-  </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { useTimelineStore } from '../store/useTimelineStore';
 
+const props = defineProps({
+  month: {
+    type: String,
+    required: true,
+  },
+});
+
 const timelineStore = useTimelineStore();
 
 const columnWidthPx = computed(() => {
   return `${timelineStore.columnWidth}px`;
 });
-const headerHeightPx = computed(() => {
-  return `${timelineStore.headerHeight}px`;
+
+const resourceWidthPx = computed(() => {
+  return `${timelineStore.resourceWidth}px`;
 });
 </script>
 
 <style scoped>
-.date-list-container {
-  display: flex;
-  position: sticky;
-  z-index: 1;
-  top: 0;
-  height: v-bind(headerHeightPx);
-}
 .month {
-  width: 100%;
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(4px);
 }
 .month-name {
   position: sticky;
+  inset-inline-start: v-bind(resourceWidthPx);
   display: inline-block;
   padding: 4px;
-  left: 50%;
   font-weight: 600;
 }
+
 .date-list {
   display: flex;
   list-style: none;
@@ -75,6 +70,8 @@ const headerHeightPx = computed(() => {
 .date-day-letter {
   display: block;
   margin-bottom: 4px;
+  font-size: 12px;
+  color: #575757;
   font-weight: 600;
 }
 </style>

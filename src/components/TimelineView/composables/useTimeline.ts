@@ -1,22 +1,23 @@
-import {
-  onMounted,
-  onUnmounted,
-  nextTick,
-  provide,
-  shallowRef,
-  inject,
-} from 'vue';
+import { ShallowRef } from 'vue';
+import { useEventListener } from '@vueuse/core';
+import { provide, shallowRef, inject } from 'vue';
 import { useTimelineStore } from '../store/useTimelineStore';
 
-function useTimeline() {
+interface UseTimeline {
+  container: ShallowRef<HTMLElement | null>; 
+  goToToday: () => void;
+}
+
+function useTimeline() : UseTimeline {
   const timelineStore = useTimelineStore();
-  const container = shallowRef(null);
+  const container: ShallowRef<HTMLElement | null> = shallowRef(null);
   const scrollLeft = shallowRef(0);
   const isMovingForwards = shallowRef(false);
   const isMovingBackwards = shallowRef(false);
+  const isRTL = timelineStore.isRTL;
 
   function handleScroll(event) {
-    const scrollLeftVal = event.target.scrollLeft;
+    const scrollLeftVal = isRTL ? -event.target.scrollLeft : event.target.scrollLeft;
     const triggerArea = timelineStore.timelineWidth * 0.1;
     isMovingForwards.value = scrollLeftVal > scrollLeft.value;
     isMovingBackwards.value = scrollLeftVal < scrollLeft.value;
@@ -37,9 +38,9 @@ function useTimeline() {
           scrollLeft.value -
           previousStartMonthDayCount * timelineStore.columnWidth;
 
-        nextTick(() => {
-          container.value.scrollLeft = newScrollPosition;
-        });
+        if (container.value) {
+          container.value.scrollLeft = isRTL ? -newScrollPosition : newScrollPosition;
+        }
       }
     } else if (isMovingBackwards.value) {
       if (scrollLeftVal < triggerArea) {
@@ -55,21 +56,23 @@ function useTimeline() {
           scrollLeft.value +
           (previousEndMonthDayCount - diff) * timelineStore.columnWidth;
 
-        nextTick(() => {
-          container.value.scrollLeft = newScrollPosition;
-        });
+        if (container.value) {
+          container.value.scrollLeft = isRTL ? -newScrollPosition : newScrollPosition;
+        }
       }
     }
   }
 
-  function goToToday(useSmoothScroll = true) {
+  function goToToday() {
     timelineStore.resetDates();
 
-    container.value.scrollTo({
-      top: 0,
-      left: timelineStore.todayPosition * timelineStore.columnWidth,
-      behavior: useSmoothScroll ? 'smooth' : 'instant',
-    });
+    if (container.value) {
+      const position = timelineStore.todayPosition * timelineStore.columnWidth;
+      container.value.scrollTo({
+        top: 0,
+        left: isRTL ? -position : position,
+      });
+    }
   }
 
   // this will make the `dragend` listener fire immediately
@@ -77,18 +80,8 @@ function useTimeline() {
     e.preventDefault();
   }
 
-  onMounted(() => {
-    container.value.addEventListener('scroll', handleScroll, {
-      passive: true,
-    });
-    container.value.addEventListener('dragover', handleDragOver);
-    goToToday(false);
-  });
-
-  onUnmounted(() => {
-    container.value.removeEventListener('scroll', handleScroll);
-    container.value.removeEventListener('dragover', handleDragOver);
-  });
+  useEventListener(container, 'scroll', handleScroll);
+  useEventListener(container, 'dragover', handleDragOver);
 
   return {
     container,
@@ -96,11 +89,11 @@ function useTimeline() {
   };
 }
 
-let currentTimeline = null;
+let currentTimeline = null as UseTimeline | null;
 const symbol = Symbol('useTimeline');
 
-export function provideTimeline(opts) {
-  currentTimeline = useTimeline(opts);
+export function provideTimeline() {
+  currentTimeline = useTimeline();
   provide(symbol, currentTimeline);
   return currentTimeline;
 }

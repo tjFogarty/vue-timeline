@@ -5,11 +5,6 @@
       <ResourceItem
         v-for="resource in resources"
         :key="resource.id"
-        class="resource-item"
-        :resource-id="resource.id"
-        :style="{
-          '--item-height': `${resPos[resource.id].height}`,
-        }"
       >
         <slot name="resource" v-bind="{ item: resource }" />
       </ResourceItem>
@@ -17,13 +12,12 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { computed } from 'vue';
 import ResourceItem from './ResourceItem.vue';
 import { useTimelineStore } from '../store/useTimelineStore';
 
-const { resPos, timelineWidth, resources, resourceWidth, headerHeight } =
-  useTimelineStore();
+const { resources, resourceWidth, headerHeight } = useTimelineStore();
 
 const resourceWidthPx = computed(() => {
   return `${resourceWidth}px`;
@@ -36,11 +30,11 @@ const headerHeightPx = computed(() => {
 <style scoped>
 .resources {
   position: sticky;
-  left: 0;
+  inset-inline-start: 0;
   z-index: 2;
   width: v-bind(resourceWidthPx);
   background-color: white;
-  border-right: 1px solid #ccc;
+  border-inline-end: 1px solid #ccc;
 }
 
 .resource-header {
@@ -58,20 +52,5 @@ const headerHeightPx = computed(() => {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.resource-item {
-  position: relative;
-}
-
-.resource-item:after {
-  content: '';
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  height: 1px;
-  width: calc(v-bind(timelineWidth) * 1px);
-  background-color: rgba(0, 0, 0, 0.05);
-  pointer-events: none;
 }
 </style>

@@ -12,28 +12,31 @@
         </template>
       </ResourceList>
 
-      <DatesHeader />
+      <MonthAndDayHeader />
 
       <WeekendIndicators />
 
-      <EventItem v-for="event in events" :key="event.id" :data="event">
+      <!-- <EventItem v-for="event in events" :key="event.id" :data="event">
         <template #event="{ item }">
           <slot name="event" v-bind="{ item }" />
         </template>
-      </EventItem>
+      </EventItem> -->
+      <ResourceTimeline v-for="resourceId in Object.keys(timelineStore.resourceTimelines)" :key="resourceId" :resource-id="resourceId" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useTimelineStore } from './store/useTimelineStore';
 import { provideTimeline } from './composables/useTimeline';
 import { provideMousePosition } from './composables/useMousePosition';
-import DatesHeader from './components/DatesHeader.vue';
+import MonthAndDayHeader from './components/MonthAndDayHeader.vue';
 import ResourceList from './components/ResourceList.vue';
 import WeekendIndicators from './components/WeekendIndicators.vue';
+import { useTextDirection } from '@vueuse/core';
 import EventItem from './components/EventItem.vue';
+import ResourceTimeline from './components/ResourceTimeline.vue';
 
 const props = defineProps({
   resources: {
@@ -56,7 +59,7 @@ const props = defineProps({
     type: Number,
     default: 200,
   },
-  resourceHeight: {
+  rowHeight: {
     type: Number,
     default: 50,
   },
@@ -66,22 +69,33 @@ const props = defineProps({
   },
 });
 
+const textDir = useTextDirection();
 const timelineStore = useTimelineStore();
 const timelineEl = ref(null);
 
-watch(
-  () => props.events,
-  () => {
-    timelineStore.addEvents(props.events);
-  },
-  { immediate: true },
-);
+timelineStore.$reset();
+
+function setConfig() {
+  timelineStore.setConfig({
+    columnWidth: props.columnWidth,
+    projectWidth: props.projectWidth,
+    rowHeight: props.rowHeight,
+    headerHeight: props.headerHeight,
+    textDir: textDir.value
+  });
+}
+
+timelineStore.addResources(props.resources);
+timelineStore.addEvents(props.events);
 
 watch(
-  () => props.resources,
-  () => {
-    timelineStore.addResources(props.resources);
-  },
+  [
+    () => props.columnWidth,
+    () => props.resourceWidth,
+    () => props.rowHeight,
+    () => props.headerHeight,
+  ],
+  setConfig,
   { immediate: true },
 );
 
@@ -97,7 +111,7 @@ const timelineWidthPx = computed(() => {
 
 const timelineHeightPx = computed(() => {
   return `${
-    props.visibleResources * props.resourceHeight + props.headerHeight
+    props.visibleResources * props.rowHeight + props.headerHeight
   }px`;
 });
 
@@ -110,6 +124,10 @@ watch(
     });
   },
 );
+
+onMounted(() => {
+  goToToday();
+});
 
 function handleTimelineClick(e) {
   if (e.target !== timelineEl.value) return;
@@ -131,7 +149,7 @@ function handleTimelineClick(e) {
 .grid-bg {
   position: absolute;
   top: calc(v-bind(headerHeight) * 1px);
-  left: calc(v-bind(resourceWidth) * 1px);
+  inset-inline-start: calc(v-bind(resourceWidth) * 1px);
   background-size: calc(v-bind(columnWidth) * 1px);
   background-image: linear-gradient(
     to right,
@@ -139,7 +157,6 @@ function handleTimelineClick(e) {
     transparent 1px
   );
   width: 100%;
-  height: 100%;
   pointer-events: none;
 }
 
@@ -147,7 +164,7 @@ function handleTimelineClick(e) {
   width: 100%;
   overflow: auto;
   border: 1px solid #ccc;
-  height: v-bind(timelineHeightPx);
+  max-height: v-bind(timelineHeightPx);
 }
 
 .timeline {
