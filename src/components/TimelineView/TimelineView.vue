@@ -2,15 +2,11 @@
   <div class="info">
     <button type="button" @click="goToToday">Go to today</button>
   </div>
-  <div ref="container" class="timeline-container">
+  <div ref="container" class="timeline-container" :style="timelineStore.cssVars">
     <div ref="timelineEl" class="timeline" @click="handleTimelineClick">
       <div class="grid-bg"></div>
 
-      <ResourceList>
-        <template #resource="{ item }">
-          <slot name="resource" v-bind="{ item }" />
-        </template>
-      </ResourceList>
+      <ResourceList />
 
       <MonthAndDayHeader />
 
@@ -26,9 +22,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import { useTimelineStore } from './store/useTimelineStore';
+import useTimelineStore from './store';
 import { provideTimeline } from './composables/useTimeline';
 import { provideMousePosition } from './composables/useMousePosition';
 import MonthAndDayHeader from './components/MonthAndDayHeader.vue';
@@ -78,7 +74,7 @@ timelineStore.$reset();
 function setConfig() {
   timelineStore.setConfig({
     columnWidth: props.columnWidth,
-    projectWidth: props.projectWidth,
+    resourceWidth: props.resourceWidth,
     rowHeight: props.rowHeight,
     headerHeight: props.headerHeight,
     textDir: textDir.value
@@ -105,16 +101,6 @@ const { container, goToToday } = provideTimeline();
 
 const { hoveredDate, hoveredResourceId } = provideMousePosition({ container });
 
-const timelineWidthPx = computed(() => {
-  return `${timelineStore.timelineWidth}px`;
-});
-
-const timelineHeightPx = computed(() => {
-  return `${
-    props.visibleResources * props.rowHeight + props.headerHeight
-  }px`;
-});
-
 watch(
   [timelineStore.startDate, timelineStore.endDate],
   ([newStart, newEnd]) => {
@@ -129,7 +115,7 @@ onMounted(() => {
   goToToday();
 });
 
-function handleTimelineClick(e) {
+function handleTimelineClick(e: MouseEvent) {
   if (e.target !== timelineEl.value) return;
 
   emit('create-event', {
@@ -148,9 +134,9 @@ function handleTimelineClick(e) {
 
 .grid-bg {
   position: absolute;
-  top: calc(v-bind(headerHeight) * 1px);
-  inset-inline-start: calc(v-bind(resourceWidth) * 1px);
-  background-size: calc(v-bind(columnWidth) * 1px);
+  top: var(--header-height);
+  inset-inline-start: var(--resource-width);;
+  background-size: var(--column-width);;
   background-image: linear-gradient(
     to right,
     rgba(0, 0, 0, 0.05) 1px,
@@ -164,14 +150,15 @@ function handleTimelineClick(e) {
   width: 100%;
   overflow: auto;
   border: 1px solid #ccc;
-  max-height: v-bind(timelineHeightPx);
+  height: var(--timeline-height);
 }
 
 .timeline {
   display: flex;
   position: relative;
   font-family: sans-serif;
-  width: v-bind(timelineWidthPx);
+  width: var(--timeline-width);
+  height: 100%;
 }
 </style>
 

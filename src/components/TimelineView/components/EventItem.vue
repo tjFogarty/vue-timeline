@@ -21,7 +21,7 @@
 import { ref, computed } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 import { useCurrentMousePosition } from '../composables/useMousePosition';
-import { useTimelineStore } from '../store/useTimelineStore';
+import useTimelineStore from '../store';
 import { DATE_FORMAT } from '../constants';
 
 const props = defineProps({
@@ -35,23 +35,20 @@ const target = ref(null);
 const isDragging = ref(false);
 const targetIsVisible = ref(false);
 const { hoveredDate, hoveredResourceId } = useCurrentMousePosition();
-const timelineStore = useTimelineStore();
+const store = useTimelineStore();
 const dragOffset = ref(0);
-const resourceHeightPx = computed(() => {
-  return `${timelineStore.rowHeight}px`;
-});
 const draggingPos = computed(() => {
   if (!isDragging.value) return null;
 
   return {
-    x: timelineStore.datePositions[hoveredDate.value.toFormat(DATE_FORMAT)],
-    y: timelineStore.resPos[hoveredResourceId.value].top,
+    x: store.datePositions[hoveredDate.value.toFormat(DATE_FORMAT)],
+    y: store.resPos[hoveredResourceId.value].top,
   };
 });
 const position = computed(() => {
-  if (!timelineStore.eventPositions[props.data.id]) return '';
+  if (!store.eventPositions[props.data.id]) return '';
 
-  const pos = timelineStore.eventPositions[props.data.id];
+  const pos = store.eventPositions[props.data.id];
   const x = draggingPos.value
     ? draggingPos.value.x - dragOffset.value
     : pos.left;
@@ -72,8 +69,8 @@ useIntersectionObserver(target, ([{ isIntersecting }]) => {
 
 function handleStartDrag(e) {
   const colOffsetPos =
-    parseInt(e.offsetX / timelineStore.columnWidth, 10) *
-    timelineStore.columnWidth;
+    parseInt(e.offsetX / store.columnWidth, 10) *
+    store.columnWidth;
   dragOffset.value = colOffsetPos;
   isDragging.value = true;
 }
@@ -87,7 +84,7 @@ function handleStopDrag() {
 .event {
   position: absolute;
   padding: 5px;
-  height: v-bind(resourceHeightPx);
+  height: var(--row-height);
   transform: var(--transform);
   width: var(--width);
   cursor: grab;

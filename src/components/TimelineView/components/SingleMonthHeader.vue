@@ -5,7 +5,7 @@
       </span>
       <ul class="date-list">
         <li
-          v-for="date in timelineStore.groupedDatesByMonth[month]"
+          v-for="date in store.groupedDatesByMonth[month]"
           :key="date.valueOf()"
           class="date-item"
         >
@@ -19,25 +19,16 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useTimelineStore } from '../store/useTimelineStore';
+import useTimelineStore from '../store';
 
-const props = defineProps({
+defineProps({
   month: {
     type: String,
     required: true,
   },
 });
 
-const timelineStore = useTimelineStore();
-
-const columnWidthPx = computed(() => {
-  return `${timelineStore.columnWidth}px`;
-});
-
-const resourceWidthPx = computed(() => {
-  return `${timelineStore.resourceWidth}px`;
-});
+const store = useTimelineStore();
 </script>
 
 <style scoped>
@@ -47,7 +38,7 @@ const resourceWidthPx = computed(() => {
 }
 .month-name {
   position: sticky;
-  inset-inline-start: v-bind(resourceWidthPx);
+  inset-inline-start: var(--resource-width);
   display: inline-block;
   padding: 4px;
   font-weight: 600;
@@ -64,7 +55,7 @@ const resourceWidthPx = computed(() => {
 .date-item {
   text-align: center;
   padding: 5px 0;
-  width: v-bind(columnWidthPx);
+  width: var(--column-width);
 }
 
 .date-day-letter {

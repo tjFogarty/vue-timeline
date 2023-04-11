@@ -1,17 +1,16 @@
 <template>
   <div
-    ref="target"
     tabindex="-1"
     class="resource-timeline"
     :style="positionStyles"
   >
-    <div class="timeline-fill"></div>
+    <div class="timeline-fill" :style="{ background: resourceColour }"></div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import { useTimelineStore } from '../store/useTimelineStore';
+import useTimelineStore from '../store';
 
 const props = defineProps({
   resourceId: {
@@ -20,19 +19,15 @@ const props = defineProps({
   },
 });
 
-const timelineStore = useTimelineStore();
+const store = useTimelineStore();
 const resource = computed(() => {
-  return timelineStore.resources.find((resource) => parseInt(resource.id, 10) === parseInt(props.resourceId, 10));
-});
-
-const resourceHeightPx = computed(() => {
-  return `${timelineStore.rowHeight}px`;
+  return store.resources.find((resource) => parseInt(resource.id, 10) === parseInt(props.resourceId, 10));
 });
 
 const position = computed(() => {
-  if (!timelineStore.resourceTimelines[props.resourceId]) return '';
+  if (!store.resourceTimelines[props.resourceId]) return '';
 
-  const pos = timelineStore.resourceTimelines[props.resourceId];
+  const pos = store.resourceTimelines[props.resourceId];
   const x = pos.left;
   const y = pos.top;
 
@@ -55,7 +50,7 @@ const resourceColour = computed(() => {
 .resource-timeline {
   position: absolute;
   padding: 5px;
-  height: v-bind(resourceHeightPx);
+  height: var(--row-height);
   transform: var(--transform);
   width: var(--width);
   padding: 10px;

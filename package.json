@@ -2,28 +2,26 @@
   "name": "vue-timeline",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint:script": "eslint --ext .js,vue --ignore-path .gitignore ."
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
-    "@typescript-eslint/parser": "^5.55.0",
     "@vueuse/core": "^9.13.0",
     "luxon": "^3.3.0",
-    "pinia": "^2.0.33",
-    "typescript": "^4.9.5",
+    "pinia": "^2.0.34",
     "vue": "^3.2.47"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.0.0",
-    "eslint": "^8.36.0",
-    "eslint-config-prettier": "^8.7.0",
+    "@vitejs/plugin-vue": "4.1.0",
+    "@vue/eslint-config-prettier": "^7.1.0",
+    "eslint": "^8.38.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-vue": "^9.9.0",
-    "prettier": "^2.8.4",
-    "vite": "4.2.0-beta.2"
+    "eslint-plugin-vue": "^9.10.0",
+    "prettier": "^2.8.7",
+    "vite": "4.2.1"
   }
 }

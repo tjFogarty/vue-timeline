@@ -1,17 +1,11 @@
-import type { Ref } from 'vue';
-import { DateTime } from 'luxon';
-import { ref, computed, inject, provide } from 'vue';
+import { shallowRef, computed, inject, provide } from 'vue';
 import { useThrottleFn, useEventListener } from '@vueuse/core';
-import { useTimelineStore } from '../store/useTimelineStore';
+import useTimelineStore from '../store';
 
-interface UseMousePositionOptions {
-  container: Ref<HTMLElement>;
-}
-
-function useMousePosition({ container }: UseMousePositionOptions) {
+function useMousePosition({ container }) {
   const timelineStore = useTimelineStore();
-  const hoveredResourceId = ref<Number | null>(null);
-  const hoveredDate = ref<DateTime | null>(null);
+  const hoveredResourceId = shallowRef(null);
+  const hoveredDate = shallowRef(null);
 
   function handleMouseMove(e) {
     const rect = container.value.getBoundingClientRect();

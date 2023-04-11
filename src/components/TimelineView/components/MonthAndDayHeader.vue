@@ -1,7 +1,7 @@
 <template>
   <div class="date-list-container">
     <SingleMonthHeader
-      v-for="month in Object.keys(timelineStore.groupedDatesByMonth)"
+      v-for="month in Object.keys(store.groupedDatesByMonth)"
       :month="month"
       :key="month"
     />
@@ -9,15 +9,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
 import SingleMonthHeader from './SingleMonthHeader.vue';
-import { useTimelineStore } from '../store/useTimelineStore';
+import useTimelineStore from '../store';
 
-const timelineStore = useTimelineStore();
-
-const headerHeightPx = computed(() => {
-  return `${timelineStore.headerHeight}px`;
-});
+const store = useTimelineStore();
 </script>
 
 <style scoped>
@@ -26,6 +21,6 @@ const headerHeightPx = computed(() => {
   position: sticky;
   z-index: 1;
   top: 0;
-  height: v-bind(headerHeightPx);
+  height: var(--header-height);
 }
 </style>

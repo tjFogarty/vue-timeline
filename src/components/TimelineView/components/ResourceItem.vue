@@ -1,30 +1,62 @@
 <template>
   <li class="resource-item">
-    <slot />
+    <button type="button" class="resource" @click="toggleEvents">{{ resource.name }}</button>
+
+    <EventList v-if="isOpen" :resourceId="resource.id" />
   </li>
 </template>
 
 <script setup>
-import { useTimelineStore } from '../store/useTimelineStore';
+import { computed } from 'vue';
+import useTimelineStore from '../store';
+import EventList from './EventList.vue';
 
-const { rowHeight, timelineWidth } = useTimelineStore();
+const props = defineProps({
+  resource: {
+    type: Object,
+    required: true,
+  },
+})
+
+const store = useTimelineStore();
+
+const isOpen = computed(() => {
+  return store.openResources.includes(props.resource.id);
+})
+
+function toggleEvents() {
+  store.toggleOpenResource(props.resource.id);
+}
 </script>
 
 <style scoped>
 .resource-item {
   position: relative;
   inset-inline-start: 0;
-  height: calc(v-bind(rowHeight) * 1px);
+  height: var(--resource-height);
 }
 
 .resource-item:after {
   content: '';
   width: 100%;
   position: absolute;
-  bottom: 0;
+  top: var(--row-height);
   height: 1px;
-  width: calc(v-bind(timelineWidth) * 1px);
+  width: var(--timeline-width);
   background-color: rgba(0, 0, 0, 0.05);
   pointer-events: none;
+}
+
+.resource {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+  height: 100%;
+  cursor: pointer;
+  width: 100%;
+  height: var(--row-height);
+  background-color: transparent;
+  border: none;
 }
 </style>

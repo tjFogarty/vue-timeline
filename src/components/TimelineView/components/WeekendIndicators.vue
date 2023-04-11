@@ -1,6 +1,6 @@
 <template>
   <div
-    v-for="weekend in timelineStore.weekendOccurences"
+    v-for="weekend in store.weekendOccurences"
     :key="weekend.date.valueOf()"
     :style="`--transform: translateX(${weekend.leftPos}px);`"
     class="weekend-indicator"
@@ -9,14 +9,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { useTimelineStore } from '../store/useTimelineStore';
+import useTimelineStore from '../store';
 
-const timelineStore = useTimelineStore();
-
-const weekendIndicatorWidth = computed(() => {
-  return `${timelineStore.columnWidth * 2}px`;
-});
+const store = useTimelineStore();
 </script>
 
 <style scoped>
@@ -29,6 +24,6 @@ const weekendIndicatorWidth = computed(() => {
   opacity: 0.2;
   height: 100%;
   background-color: #ccc;
-  width: v-bind(weekendIndicatorWidth);
+  width: calc(var(--column-width) * 2);
 }
 </style>

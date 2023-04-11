@@ -3,49 +3,39 @@
     <div class="resource-header">Resources</div>
     <ul class="resource-list">
       <ResourceItem
-        v-for="resource in resources"
+        v-for="resource in store.resources"
+        :resource="resource"
         :key="resource.id"
-      >
-        <slot name="resource" v-bind="{ item: resource }" />
-      </ResourceItem>
+      />
     </ul>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { computed } from 'vue';
+<script setup>
 import ResourceItem from './ResourceItem.vue';
-import { useTimelineStore } from '../store/useTimelineStore';
+import useTimelineStore from '../store';
 
-const { resources, resourceWidth, headerHeight } = useTimelineStore();
-
-const resourceWidthPx = computed(() => {
-  return `${resourceWidth}px`;
-});
-const headerHeightPx = computed(() => {
-  return `${headerHeight}px`;
-});
+const store = useTimelineStore();
 </script>
 
 <style scoped>
 .resources {
   position: sticky;
   inset-inline-start: 0;
+  top: 0;
   z-index: 2;
-  width: v-bind(resourceWidthPx);
+  width: var(--resource-width);
   background-color: white;
   border-inline-end: 1px solid #ccc;
 }
 
 .resource-header {
-  position: sticky;
-  top: 0;
-  background-color: white;
   display: flex;
   align-items: center;
+  background-color: white;
   width: 100%;
   z-index: 1;
-  height: v-bind(headerHeightPx);
+  height: var(--header-height);
 }
 
 .resource-list {

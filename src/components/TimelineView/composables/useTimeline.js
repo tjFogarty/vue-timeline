@@ -1,23 +1,21 @@
-import { ShallowRef } from 'vue';
 import { useEventListener } from '@vueuse/core';
-import { provide, shallowRef, inject } from 'vue';
-import { useTimelineStore } from '../store/useTimelineStore';
+import { provide, shallowRef, inject, reactive } from 'vue';
+import useTimelineStore from '../store';
 
-interface UseTimeline {
-  container: ShallowRef<HTMLElement | null>; 
-  goToToday: () => void;
-}
-
-function useTimeline() : UseTimeline {
+function useTimeline() {
   const timelineStore = useTimelineStore();
-  const container: ShallowRef<HTMLElement | null> = shallowRef(null);
+  const container = shallowRef(null);
   const scrollLeft = shallowRef(0);
   const isMovingForwards = shallowRef(false);
   const isMovingBackwards = shallowRef(false);
+  const fixedPosition = reactive({ top: 0, left: 0 });
   const isRTL = timelineStore.isRTL;
 
   function handleScroll(event) {
-    const scrollLeftVal = isRTL ? -event.target.scrollLeft : event.target.scrollLeft;
+    const eventTarget = event.target;
+    const scrollLeftVal = isRTL
+      ? -eventTarget.scrollLeft
+      : eventTarget.scrollLeft;
     const triggerArea = timelineStore.timelineWidth * 0.1;
     isMovingForwards.value = scrollLeftVal > scrollLeft.value;
     isMovingBackwards.value = scrollLeftVal < scrollLeft.value;
@@ -26,7 +24,7 @@ function useTimeline() : UseTimeline {
     // need to swap months in and out while preserving the scroll position
     if (isMovingForwards.value) {
       if (
-        scrollLeftVal + event.target.offsetWidth >=
+        scrollLeftVal + eventTarget.offsetWidth >=
         timelineStore.timelineWidth - triggerArea
       ) {
         const previousStartMonthDayCount =
@@ -39,7 +37,9 @@ function useTimeline() : UseTimeline {
           previousStartMonthDayCount * timelineStore.columnWidth;
 
         if (container.value) {
-          container.value.scrollLeft = isRTL ? -newScrollPosition : newScrollPosition;
+          container.value.scrollLeft = isRTL
+            ? -newScrollPosition
+            : newScrollPosition;
         }
       }
     } else if (isMovingBackwards.value) {
@@ -57,7 +57,9 @@ function useTimeline() : UseTimeline {
           (previousEndMonthDayCount - diff) * timelineStore.columnWidth;
 
         if (container.value) {
-          container.value.scrollLeft = isRTL ? -newScrollPosition : newScrollPosition;
+          container.value.scrollLeft = isRTL
+            ? -newScrollPosition
+            : newScrollPosition;
         }
       }
     }
@@ -80,16 +82,17 @@ function useTimeline() : UseTimeline {
     e.preventDefault();
   }
 
-  useEventListener(container, 'scroll', handleScroll);
+  useEventListener(container, 'scroll', handleScroll, { passive: true });
   useEventListener(container, 'dragover', handleDragOver);
 
   return {
     container,
     goToToday,
+    scrollLeft,
   };
 }
 
-let currentTimeline = null as UseTimeline | null;
+let currentTimeline = null;
 const symbol = Symbol('useTimeline');
 
 export function provideTimeline() {
