@@ -10,18 +10,18 @@
     "lint:script": "eslint --ext .js,vue --ignore-path .gitignore ."
   },
   "dependencies": {
-    "@vueuse/core": "^9.13.0",
+    "@vueuse/core": "^10.1.2",
     "luxon": "^3.3.0",
-    "pinia": "^2.0.34",
-    "vue": "^3.2.47"
+    "pinia": "^2.1.3",
+    "vue": "^3.3.4"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "4.1.0",
+    "@vitejs/plugin-vue": "4.2.3",
     "@vue/eslint-config-prettier": "^7.1.0",
-    "eslint": "^8.38.0",
+    "eslint": "^8.41.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-vue": "^9.10.0",
-    "prettier": "^2.8.7",
-    "vite": "4.2.1"
+    "eslint-plugin-vue": "^9.14.1",
+    "prettier": "^2.8.8",
+    "vite": "4.3.9"
   }
 }

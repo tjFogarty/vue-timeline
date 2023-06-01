@@ -17,34 +17,36 @@ export default {
   },
 
   groupedDatesByMonth() {
-    const groupedDates = {};
+    const groupedDates = new Map();
     this.dates.forEach((date) => {
       const month = date.toFormat('MMMM y');
-      if (!groupedDates[month]) {
-        groupedDates[month] = [];
+      if (!groupedDates.has(month)) {
+        groupedDates.set(month, []);
       }
-      groupedDates[month].push(date);
+      groupedDates.get(month).push(date);
     });
-    return groupedDates;
+    return Object.fromEntries(groupedDates);
   },
 
   groupedMonthsByYear() {
-    const groupedMonths = {};
+    const groupedMonths = new Map();
     this.dates.forEach((date) => {
       const year = date.toFormat('y');
       const month = date.toFormat('MMMM');
-
-      if (!groupedMonths[year]) {
-        groupedMonths[year] = {};
+      if (!groupedMonths.has(year)) {
+        groupedMonths.set(year, new Map());
       }
-
-      if (!groupedMonths[year][month]) {
-        groupedMonths[year][month] = [];
+      if (!groupedMonths.get(year).has(month)) {
+        groupedMonths.get(year).set(month, []);
       }
-
-      groupedMonths[year][month].push(date);
+      groupedMonths.get(year).get(month).push(date);
     });
-    return groupedMonths;
+    return Object.fromEntries(
+      [...groupedMonths].map(([year, months]) => [
+        year,
+        Object.fromEntries(months),
+      ]),
+    );
   },
 
   datePositions() {
@@ -106,7 +108,7 @@ export default {
   },
 
   resourcePositions() {
-    const positions = {};
+    const positions = new Map();
 
     this.resources.forEach((r, index) => {
       const previousHeights = this.resources
@@ -114,12 +116,12 @@ export default {
         .map((r) => this.rowHeights[r.id])
         .reduce((a, b) => a + b, 0);
 
-      positions[r.id] = {
+      positions.set(r.id, {
         top: previousHeights + this.headerHeight,
-      };
+      });
     });
 
-    return positions;
+    return Object.fromEntries(positions);
   },
 
   eventPositions() {

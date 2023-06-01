@@ -49,7 +49,6 @@ const resourceColour = computed(() => {
 <style scoped>
 .resource-timeline {
   position: absolute;
-  padding: 5px;
   height: var(--row-height);
   transform: var(--transform);
   width: var(--width);

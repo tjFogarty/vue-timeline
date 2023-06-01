@@ -1,5 +1,5 @@
 import { useEventListener } from '@vueuse/core';
-import { provide, shallowRef, inject, reactive } from 'vue';
+import { provide, shallowRef, inject } from 'vue';
 import useTimelineStore from '../store';
 
 function useTimeline() {
@@ -8,7 +8,6 @@ function useTimeline() {
   const scrollLeft = shallowRef(0);
   const isMovingForwards = shallowRef(false);
   const isMovingBackwards = shallowRef(false);
-  const fixedPosition = reactive({ top: 0, left: 0 });
   const isRTL = timelineStore.isRTL;
 
   function handleScroll(event) {

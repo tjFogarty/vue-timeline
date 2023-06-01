@@ -1,24 +1,28 @@
 <template>
   <div class="month">
-      <span class="month-name">
-        {{ month }}
-      </span>
-      <ul class="date-list">
-        <li
-          v-for="date in store.groupedDatesByMonth[month]"
-          :key="date.valueOf()"
-          class="date-item"
+    <span class="month-name">
+      {{ month }}
+    </span>
+    <ul class="date-list">
+      <li
+        v-for="date in store.groupedDatesByMonth[month]"
+        :key="date.valueOf()"
+        class="date-item"
+      >
+        <span class="date-day-letter">{{ date.toFormat('ccccc') }}</span>
+        <span
+          class="date-day-number"
+          :class="{ today: date.hasSame(DateTime.local(), 'day') }"
         >
-          <span class="date-day-letter">{{ date.toFormat('ccccc') }}</span>
-          <span class="date-day-number">
-            {{ date.toFormat('dd') }}
-          </span>
-        </li>
-      </ul>
-    </div>
+          {{ date.toFormat('dd') }}
+        </span>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup>
+import { DateTime } from 'luxon';
 import useTimelineStore from '../store';
 
 defineProps({
@@ -64,5 +68,16 @@ const store = useTimelineStore();
   font-size: 12px;
   color: #575757;
   font-weight: 600;
+}
+
+.date-day-number {
+  display: inline-block;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.today {
+  background: #004bff;
+  color: white;
 }
 </style>

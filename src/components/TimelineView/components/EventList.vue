@@ -1,6 +1,10 @@
 <template>
   <ul class="event-list">
-    <li v-for="event in store.eventsGroupedByResource[resourceId]" :key="event.id" class="event-item">
+    <li
+      v-for="event in store.eventsGroupedByResource[resourceId]"
+      :key="event.id"
+      class="event-item"
+    >
       {{ event.name }}
     </li>
   </ul>
@@ -27,8 +31,12 @@ const store = useTimelineStore();
 }
 
 .event-item {
+  display: flex;
+  align-items: center;
   position: relative;
+  font-size: 13px;
   height: var(--row-height);
+  padding: 6px;
 }
 
 .event-item:after {

@@ -2,6 +2,11 @@ import { shallowRef, computed, inject, provide } from 'vue';
 import { useThrottleFn, useEventListener } from '@vueuse/core';
 import useTimelineStore from '../store';
 
+/**
+  * @typedef {Object} MousePosition
+  * @property {Ref<null|Date>} hoveredDate
+  * @property {Ref<null|String>} hoveredResourceId
+*/
 function useMousePosition({ container }) {
   const timelineStore = useTimelineStore();
   const hoveredResourceId = shallowRef(null);
