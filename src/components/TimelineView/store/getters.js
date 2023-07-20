@@ -50,14 +50,14 @@ export default {
   },
 
   datePositions() {
-    const positions = {};
-
+    const positions = new Map();
     this.dates.forEach((date, index) => {
-      positions[date.toFormat(DATE_FORMAT)] =
-        index * this.columnWidth + this.resourceWidth;
+      positions.set(
+        date.toFormat(DATE_FORMAT),
+        index * this.columnWidth + this.resourceWidth,
+      );
     });
-
-    return positions;
+    return Object.fromEntries(positions);
   },
 
   timelineWidth() {
@@ -126,25 +126,26 @@ export default {
 
   eventPositions() {
     const positions = {};
-    this.events.forEach((event) => {
+    this.visibleEventTimelines.forEach((event, index) => {
       if (event.startDate < this.startDate || event.endDate > this.endDate) {
         return;
       }
 
-      const dateIndex = this.dates.findIndex((d) =>
-        d.hasSame(event.startDate, 'day'),
-      );
+      const dateIndex = this.dates.findIndex((d) => {
+        return d.hasSame(new Date(event.startDate), 'day');
+      });
 
       if (dateIndex !== -1) {
-        const leftPos =
-          this.datePositions[event.startDate.toFormat(DATE_FORMAT)];
-        const { days = 1 } = event.endDate
-          .diff(event.startDate, 'days')
+        const { days = 1 } = DateTime.fromFormat(event.endDate, DATE_FORMAT)
+          .diff(DateTime.fromFormat(event.startDate, DATE_FORMAT), 'days')
           .toObject();
-        const topPos = this.resPos[event.resourceId].top;
+        const rowTopPosition = this.resourcePositions[event.resourceId].top;
+        const eventGroup = this.visibleEventTimelines.filter((ev) => ev.resourceId === event.resourceId);
+        const eventTop = eventGroup.findIndex(ev => ev.id === event.id) * this.rowHeight;
+        const topPos = rowTopPosition + eventTop + this.rowHeight;
 
         positions[event.id] = {
-          left: leftPos,
+          left: this.datePositions[event.startDate],
           top: topPos,
           width: (days + 1) * this.columnWidth,
         };
@@ -212,6 +213,13 @@ export default {
     });
 
     return eventsGroupedByResource;
+  },
+
+  visibleEventTimelines() {
+    return this.events.filter((event) => {
+      // const isInDateRange = event.startDate >= this.startDate && event.endDate <= this.endDate;
+      return this.openResources.includes(event.resourceId);
+    });
   },
 
   cssVars() {

@@ -2,7 +2,7 @@
   <TimelineView :resources="resources" :events="tasks" :column-width="35" />
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue';
 import { DateTime } from 'luxon';
 import TimelineView from './TimelineView/TimelineView.vue';
@@ -50,8 +50,9 @@ const resources = ref(
 const tasks = ref(
   resources.value.flatMap((resource) => {
     return Array.from({ length: 5 }).map((_, i) => {
-      const startDate = DateTime.now()
-        .plus({ days: Math.floor(Math.random() * 10) + 1 });
+      const startDate = DateTime.now().plus({
+        days: Math.floor(Math.random() * 10) + 1,
+      });
       const days = Math.floor(Math.random() * 25) + 1;
       const endDate = startDate.plus({ days });
 

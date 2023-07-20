@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import ProjectTimeline from './components/ProjectTimeline.vue';
 </script>
 

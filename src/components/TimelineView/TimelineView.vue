@@ -2,8 +2,16 @@
   <div class="info">
     <button type="button" @click="goToToday">Go to today</button>
   </div>
-  <div ref="container" class="timeline-container" :style="timelineStore.cssVars">
-    <div ref="timelineEl" class="timeline" @click="handleTimelineClick">
+  <div
+    ref="container"
+    class="timeline-container"
+    :style="timelineStore.cssVars"
+  >
+    <div
+      ref="timelineEl"
+      class="timeline teej-timeline"
+      @click="handleTimelineClick"
+    >
       <div class="grid-bg"></div>
 
       <ResourceList />
@@ -12,27 +20,32 @@
 
       <WeekendIndicators />
 
-      <!-- <EventItem v-for="event in events" :key="event.id" :data="event">
-        <template #event="{ item }">
-          <slot name="event" v-bind="{ item }" />
-        </template>
-      </EventItem> -->
-      <ResourceTimeline v-for="resourceId in Object.keys(timelineStore.resourceTimelines)" :key="resourceId" :resource-id="resourceId" />
+      <ResourceTimeline
+        v-for="resourceId in Object.keys(timelineStore.resourceTimelines)"
+        :key="resourceId"
+        :resource-id="resourceId"
+      />
+
+      <EventTimeline
+        v-for="event in timelineStore.visibleEventTimelines"
+        :key="event.id"
+        :data="event"
+      />
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+<script setup>
+import { onMounted, ref, watch } from 'vue';
+import { useTextDirection } from '@vueuse/core';
 import useTimelineStore from './store';
 import { provideTimeline } from './composables/useTimeline';
 import { provideMousePosition } from './composables/useMousePosition';
 import MonthAndDayHeader from './components/MonthAndDayHeader.vue';
 import ResourceList from './components/ResourceList.vue';
 import WeekendIndicators from './components/WeekendIndicators.vue';
-import { useTextDirection } from '@vueuse/core';
-import EventItem from './components/EventItem.vue';
 import ResourceTimeline from './components/ResourceTimeline.vue';
+import EventTimeline from './components/EventTimeline.vue';
 
 const props = defineProps({
   resources: {
@@ -77,7 +90,7 @@ function setConfig() {
     resourceWidth: props.resourceWidth,
     rowHeight: props.rowHeight,
     headerHeight: props.headerHeight,
-    textDir: textDir.value
+    textDir: textDir.value,
   });
 }
 
@@ -115,7 +128,7 @@ onMounted(() => {
   goToToday();
 });
 
-function handleTimelineClick(e: MouseEvent) {
+function handleTimelineClick(e) {
   if (e.target !== timelineEl.value) return;
 
   emit('create-event', {
@@ -135,8 +148,8 @@ function handleTimelineClick(e: MouseEvent) {
 .grid-bg {
   position: absolute;
   top: var(--header-height);
-  inset-inline-start: var(--resource-width);;
-  background-size: var(--column-width);;
+  inset-inline-start: var(--resource-width);
+  background-size: var(--column-width);
   background-image: linear-gradient(
     to right,
     rgba(0, 0, 0, 0.05) 1px,
@@ -163,9 +176,9 @@ function handleTimelineClick(e: MouseEvent) {
 </style>
 
 <style>
-.timeline *,
-.timeline *:before,
-.timeline *:after {
+.teej-timeline *,
+.teej-timeline *:before,
+.teej-timeline *:after {
   box-sizing: border-box;
 }
 </style>

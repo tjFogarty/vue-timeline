@@ -11,9 +11,7 @@
     @mousedown.prevent="handleStartDrag"
     @mouseup="handleStopDrag"
   >
-    <slot v-if="targetIsVisible" name="event" v-bind="{ item: data }">{{
-      data.name
-    }}</slot>
+    <div class="event-timeline-fill"></div>
   </div>
 </template>
 
@@ -62,6 +60,9 @@ const positionStyles = computed(() => {
   const { w, x, y } = position.value;
   return `--transform: translate(${x}px, ${y}px); --width: ${w}px`;
 });
+const resourceColour = computed(() => {
+  return store.resources[props.data.resourceId].colour;
+});
 
 useIntersectionObserver(target, ([{ isIntersecting }]) => {
   targetIsVisible.value = isIntersecting;
@@ -69,8 +70,7 @@ useIntersectionObserver(target, ([{ isIntersecting }]) => {
 
 function handleStartDrag(e) {
   const colOffsetPos =
-    parseInt(e.offsetX / store.columnWidth, 10) *
-    store.columnWidth;
+    parseInt(e.offsetX / store.columnWidth, 10) * store.columnWidth;
   dragOffset.value = colOffsetPos;
   isDragging.value = true;
 }
@@ -83,13 +83,15 @@ function handleStopDrag() {
 <style scoped>
 .event {
   position: absolute;
-  padding: 5px;
+  padding: 10px;
   height: var(--row-height);
   transform: var(--transform);
   width: var(--width);
   cursor: grab;
   opacity: 0;
-  transition: transform ease 0.1s, opacity ease 0.2s;
+  transition:
+    transform ease 0.1s,
+    opacity ease 0.2s;
 }
 
 .event.is-visible {
@@ -98,5 +100,12 @@ function handleStopDrag() {
 
 .event.is-dragging {
   cursor: grabbing;
+}
+
+.event-timeline-fill {
+  width: 100%;
+  height: 100%;
+  background-color: #ccc;
+  border-radius: 20px;
 }
 </style>
