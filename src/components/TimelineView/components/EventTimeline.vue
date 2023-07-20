@@ -6,7 +6,6 @@
     :style="positionStyles"
     :class="{
       'is-dragging': isDragging,
-      'is-visible': targetIsVisible,
     }"
     @mousedown.prevent="handleStartDrag"
     @mouseup="handleStopDrag"
@@ -88,18 +87,11 @@ function handleStopDrag() {
   transform: var(--transform);
   width: var(--width);
   cursor: grab;
-  opacity: 0;
-  transition:
-    transform ease 0.1s,
-    opacity ease 0.2s;
-}
-
-.event.is-visible {
-  opacity: 1;
 }
 
 .event.is-dragging {
   cursor: grabbing;
+  transition: transform ease 0.1s;
 }
 
 .event-timeline-fill {
