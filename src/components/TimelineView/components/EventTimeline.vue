@@ -32,7 +32,7 @@ const props = defineProps({
 const target = ref(null);
 const isDragging = ref(false);
 const targetIsVisible = ref(false);
-const { hoveredDate, hoveredResourceId } = useCurrentMousePosition();
+const { hoveredDate } = useCurrentMousePosition();
 const store = useTimelineStore();
 const dragOffset = ref(0);
 const draggingPos = computed(() => {
@@ -40,7 +40,6 @@ const draggingPos = computed(() => {
 
   return {
     x: store.datePositions[hoveredDate.value.toFormat(DATE_FORMAT)],
-    y: store.resPos[hoveredResourceId.value].top,
   };
 });
 const position = computed(() => {
@@ -50,7 +49,7 @@ const position = computed(() => {
   const x = draggingPos.value
     ? draggingPos.value.x - dragOffset.value
     : pos.left;
-  const y = draggingPos.value ? draggingPos.value.y : pos.top;
+  const y = pos.top;
 
   return { x, y, w: pos.width };
 });
@@ -76,6 +75,7 @@ function handleStartDrag(e) {
 }
 
 function handleStopDrag() {
+  // console.log(draggingPos.value.x - dragOffset.value);
   isDragging.value = false;
 }
 </script>
