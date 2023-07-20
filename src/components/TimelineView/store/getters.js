@@ -217,9 +217,8 @@ export default {
 
   visibleEventTimelines() {
     return this.events.filter((event) => {
-      // const isInDateRange = event.startDate >= this.startDate && event.endDate <= this.endDate;
       return this.openResources.includes(event.resourceId);
-    });
+    }).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
   },
 
   cssVars() {
