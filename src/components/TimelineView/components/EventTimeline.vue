@@ -16,7 +16,6 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useIntersectionObserver } from '@vueuse/core';
 import { useCurrentMousePosition } from '../composables/useMousePosition';
 import useTimelineStore from '../store';
 import { DATE_FORMAT } from '../constants';
@@ -30,7 +29,6 @@ const props = defineProps({
 
 const target = ref(null);
 const isDragging = ref(false);
-const targetIsVisible = ref(false);
 const { hoveredDate } = useCurrentMousePosition();
 const store = useTimelineStore();
 const dragOffset = ref(0);
@@ -58,13 +56,6 @@ const positionStyles = computed(() => {
   const { w, x, y } = position.value;
   return `--transform: translate(${x}px, ${y}px); --width: ${w}px`;
 });
-const resourceColour = computed(() => {
-  return store.resources[props.data.resourceId].colour;
-});
-
-useIntersectionObserver(target, ([{ isIntersecting }]) => {
-  targetIsVisible.value = isIntersecting;
-});
 
 function handleStartDrag(e) {
   const colOffsetPos =
@@ -82,7 +73,7 @@ function handleStopDrag() {
 <style scoped>
 .event {
   position: absolute;
-  padding: 10px;
+  padding: 12px;
   height: var(--row-height);
   transform: var(--transform);
   width: var(--width);
@@ -97,7 +88,7 @@ function handleStopDrag() {
 .event-timeline-fill {
   width: 100%;
   height: 100%;
-  background-color: #ccc;
+  background-color: #fe7104;
   border-radius: 20px;
 }
 </style>

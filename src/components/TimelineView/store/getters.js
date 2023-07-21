@@ -218,7 +218,7 @@ export default {
   visibleEventTimelines() {
     return this.events.filter((event) => {
       return this.openResources.includes(event.resourceId);
-    }).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+    });
   },
 
   cssVars() {

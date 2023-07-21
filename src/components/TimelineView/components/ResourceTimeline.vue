@@ -1,10 +1,6 @@
 <template>
-  <div
-    tabindex="-1"
-    class="resource-timeline"
-    :style="positionStyles"
-  >
-    <div class="timeline-fill" :style="{ background: resourceColour }"></div>
+  <div tabindex="-1" class="resource-timeline" :style="positionStyles">
+    <div class="timeline-fill"></div>
   </div>
 </template>
 
@@ -20,9 +16,6 @@ const props = defineProps({
 });
 
 const store = useTimelineStore();
-const resource = computed(() => {
-  return store.resources.find((resource) => parseInt(resource.id, 10) === parseInt(props.resourceId, 10));
-});
 
 const position = computed(() => {
   if (!store.resourceTimelines[props.resourceId]) return '';
@@ -40,10 +33,6 @@ const positionStyles = computed(() => {
   const { w, x, y } = position.value;
   return `--transform: translate(${x}px, ${y}px); --width: ${w}px`;
 });
-
-const resourceColour = computed(() => {
-  return resource.value.colour;
-});
 </script>
 
 <style scoped>
@@ -52,11 +41,11 @@ const resourceColour = computed(() => {
   height: var(--row-height);
   transform: var(--transform);
   width: var(--width);
-  padding: 10px;
+  padding: 8px;
 }
 
 .timeline-fill {
-  background-color: v-bind(resourceColour);
+  background-color: #007be0;
   width: 100%;
   height: 100%;
   border-radius: 20px;

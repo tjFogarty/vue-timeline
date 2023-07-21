@@ -77,7 +77,7 @@ const store = useTimelineStore();
 }
 
 .today {
-  background: #004bff;
+  background: #ff7500;
   color: white;
 }
 </style>

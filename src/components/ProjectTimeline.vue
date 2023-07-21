@@ -1,5 +1,10 @@
 <template>
-  <TimelineView :resources="resources" :events="tasks" :column-width="35" />
+  <TimelineView
+    :resources="resources"
+    :events="tasks"
+    :column-width="35"
+    :row-height="40"
+  />
 </template>
 
 <script setup>
