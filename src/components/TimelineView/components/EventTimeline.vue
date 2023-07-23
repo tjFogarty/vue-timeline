@@ -65,7 +65,14 @@ function handleStartDrag(e) {
 }
 
 function handleStopDrag() {
-  // console.log(draggingPos.value.x - dragOffset.value);
+  const colOffsetPos = draggingPos.value.x - dragOffset.value;
+
+  const date = Object.keys(store.datePositions).find(
+    (key) => store.datePositions[key] === colOffsetPos,
+  );
+
+  store.updateEventDate(props.data.id, date);
+
   isDragging.value = false;
 }
 </script>

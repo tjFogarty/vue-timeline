@@ -28,27 +28,6 @@ export default {
     return Object.fromEntries(groupedDates);
   },
 
-  groupedMonthsByYear() {
-    const groupedMonths = new Map();
-    this.dates.forEach((date) => {
-      const year = date.toFormat('y');
-      const month = date.toFormat('MMMM');
-      if (!groupedMonths.has(year)) {
-        groupedMonths.set(year, new Map());
-      }
-      if (!groupedMonths.get(year).has(month)) {
-        groupedMonths.get(year).set(month, []);
-      }
-      groupedMonths.get(year).get(month).push(date);
-    });
-    return Object.fromEntries(
-      [...groupedMonths].map(([year, months]) => [
-        year,
-        Object.fromEntries(months),
-      ]),
-    );
-  },
-
   datePositions() {
     const positions = new Map();
     this.dates.forEach((date, index) => {

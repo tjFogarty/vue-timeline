@@ -1,4 +1,6 @@
+import { DateTime } from 'luxon';
 import { startOfLastMonth, endOfNextMonth } from './constants';
+import { DATE_FORMAT } from '../constants';
 
 export default {
   setConfig({ columnWidth, resourceWidth, rowHeight, headerHeight, textDir }) {
@@ -15,6 +17,20 @@ export default {
 
   addEvent(event) {
     this.events.push(event);
+  },
+
+  updateEventDate(eventId, date) {
+    const event = this.events.find((e) => e.id === eventId);
+    const eventIndex = this.events.findIndex((e) => e.id === eventId);
+
+    const oldStartDate = DateTime.fromFormat(event.startDate, DATE_FORMAT);
+    const newStartDate = DateTime.fromFormat(date, DATE_FORMAT);
+    const { days } = newStartDate.diff(oldStartDate, 'days').toObject();
+
+    event.startDate = date;
+    event.endDate = DateTime.fromFormat(event.endDate, DATE_FORMAT).plus({ days }).toFormat(DATE_FORMAT);
+    
+    this.events.splice(eventIndex, 1, event);
   },
 
   addResources(resources) {
