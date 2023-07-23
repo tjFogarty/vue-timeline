@@ -8,7 +8,6 @@
       'is-dragging': isDragging,
     }"
     @mousedown.prevent="handleStartDrag"
-    @mouseup="handleStopDrag"
   >
     <div class="event-timeline-fill"></div>
   </div>
@@ -62,6 +61,11 @@ function handleStartDrag(e) {
     parseInt(e.offsetX / store.columnWidth, 10) * store.columnWidth;
   dragOffset.value = colOffsetPos;
   isDragging.value = true;
+
+  // adding event listener here instead of on the element
+  // because if you move the mouse off the event
+  // and then let go, nothing happens as the event can't be triggered
+  document.addEventListener('mouseup', handleStopDrag, { once: true });
 }
 
 function handleStopDrag() {
