@@ -124,7 +124,7 @@ export default {
         const topPos = rowTopPosition + eventTop + this.rowHeight;
 
         positions[event.id] = {
-          left: this.datePositions[event.startDate],
+          left: this.isRTL ? -this.datePositions[event.startDate] : this.datePositions[event.startDate],
           top: topPos,
           width: (days + 1) * this.columnWidth,
         };

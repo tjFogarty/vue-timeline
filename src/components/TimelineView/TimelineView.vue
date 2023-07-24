@@ -163,7 +163,7 @@ function handleTimelineClick(e) {
   width: 100%;
   overflow: auto;
   border: 1px solid #ccc;
-  height: var(--timeline-height);
+  max-height: 600px;
 }
 
 .timeline {
@@ -171,6 +171,7 @@ function handleTimelineClick(e) {
   position: relative;
   font-family: sans-serif;
   width: var(--timeline-width);
+  height: var(--timeline-height);
   height: 100%;
 }
 </style>

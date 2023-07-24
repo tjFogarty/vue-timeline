@@ -1,6 +1,8 @@
 <template>
   <li class="resource-item">
-    <button type="button" class="resource" @click="toggleEvents">{{ resource.name }}</button>
+    <button type="button" class="resource" @click="toggleEvents">
+      {{ resource.name }}
+    </button>
 
     <EventList v-if="isOpen" :resourceId="resource.id" />
   </li>
@@ -16,13 +18,25 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-})
+});
 
 const store = useTimelineStore();
 
 const isOpen = computed(() => {
   return store.openResources.includes(props.resource.id);
-})
+});
+
+const elementHeight = computed(() => {
+  if (!isOpen.value) {
+    return `${store.rowHeight}px`;
+  }
+
+  let height =
+    store.rowHeight +
+    store.eventsGroupedByResource[props.resource.id].length * store.rowHeight;
+
+  return `${height}px`;
+});
 
 function toggleEvents() {
   store.toggleOpenResource(props.resource.id);
@@ -34,6 +48,8 @@ function toggleEvents() {
   position: relative;
   inset-inline-start: 0;
   height: var(--resource-height);
+  content-visibility: auto;
+  contain-intrinsic-size: var(--resource-width) v-bind(elementHeight);
 }
 
 .resource-item:after {
