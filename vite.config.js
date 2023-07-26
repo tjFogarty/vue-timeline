@@ -10,10 +10,11 @@ export default defineConfig({
       fileName: 'vue-timeline',
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', 'pinia'],
       output: {
         globals: {
           vue: 'Vue',
+          pinia: 'Pinia',
         },
       },
     },
@@ -21,7 +22,8 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src')
+      '@': resolve(__dirname, 'src'),
+      'pinia': 'pinia/dist/pinia.esm-browser.js',
     }
   },
 });
