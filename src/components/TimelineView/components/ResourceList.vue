@@ -1,6 +1,6 @@
 <template>
   <div class="resources">
-    <div class="resource-header">Resources</div>
+    <div class="resource-header">Projects</div>
     <ul class="resource-list">
       <ResourceItem
         v-for="resource in store.resources"
@@ -30,11 +30,14 @@ const store = useTimelineStore();
 }
 
 .resource-header {
+  position: sticky;
   display: flex;
   align-items: center;
   background-color: white;
   width: 100%;
+  top: 0;
   z-index: 1;
+  padding: 5px;
   height: var(--header-height);
 }
 

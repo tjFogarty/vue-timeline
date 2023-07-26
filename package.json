@@ -1,8 +1,18 @@
 {
-  "name": "vue-timeline",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@teej/vue-timeline",
+  "version": "0.0.1",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/vue-timeline.umd.cjs",
+  "module": "./dist/vue-timeline.js",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-timeline.js",
+      "require": "./dist/vue-timeline.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

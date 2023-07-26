@@ -10,6 +10,7 @@
     <div
       ref="timelineEl"
       class="timeline teej-timeline"
+      :class="{ 'is-dragging-event': isDraggingEvent }"
       @click="handleTimelineClick"
     >
       <div class="grid-bg"></div>
@@ -112,7 +113,8 @@ const emit = defineEmits(['create-event', 'date-change']);
 
 const { container, goToToday } = provideTimeline();
 
-const { hoveredDate, hoveredResourceId } = provideMousePosition({ container });
+const { hoveredDate, hoveredResourceId, isDraggingEvent } =
+  provideMousePosition({ container });
 
 watch(
   [timelineStore.startDate, timelineStore.endDate],
@@ -171,8 +173,12 @@ function handleTimelineClick(e) {
   position: relative;
   font-family: sans-serif;
   width: var(--timeline-width);
-  height: var(--timeline-height);
+  /* height: var(--timeline-height); */
   height: 100%;
+}
+
+.is-dragging-event {
+  cursor: grabbing;
 }
 </style>
 

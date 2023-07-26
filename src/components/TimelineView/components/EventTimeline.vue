@@ -28,7 +28,7 @@ const props = defineProps({
 
 const target = ref(null);
 const isDragging = ref(false);
-const { hoveredDate } = useCurrentMousePosition();
+const { hoveredDate, isDraggingEvent } = useCurrentMousePosition();
 const store = useTimelineStore();
 const dragOffset = ref(0);
 const draggingPos = computed(() => {
@@ -61,6 +61,7 @@ function handleStartDrag(e) {
     parseInt(e.offsetX / store.columnWidth, 10) * store.columnWidth;
   dragOffset.value = colOffsetPos;
   isDragging.value = true;
+  isDraggingEvent.value = props.data.id;
 
   // adding event listener here instead of on the element
   // because if you move the mouse off the event
@@ -78,6 +79,7 @@ function handleStopDrag() {
   store.updateEventDate(props.data.id, date);
 
   isDragging.value = false;
+  isDraggingEvent.value = null;
 }
 </script>
 
@@ -88,7 +90,9 @@ function handleStopDrag() {
   height: var(--row-height);
   transform: var(--transform);
   width: var(--width);
+  content-visibility: auto;
   cursor: grab;
+  contain-intrinsic-size: var(--width) var(--row-height);
 }
 
 .event.is-dragging {

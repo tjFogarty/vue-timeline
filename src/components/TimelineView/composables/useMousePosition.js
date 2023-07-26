@@ -37,6 +37,7 @@ function useMousePosition({ container }) {
   return {
     hoveredDate: computed(() => hoveredDate.value),
     hoveredResourceId: computed(() => hoveredResourceId.value),
+    isDraggingEvent: shallowRef(null),
   };
 }
 
