@@ -1,6 +1,11 @@
 {
   "name": "@teej/vue-timeline",
   "version": "0.0.4",
+  "homepage": "https://timeline.tj.ie",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tjFogarty/vue-timeline/"
+  },
   "files": [
     "dist"
   ],
