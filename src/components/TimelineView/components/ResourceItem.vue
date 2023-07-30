@@ -1,7 +1,28 @@
 <template>
   <li class="resource-item">
-    <button type="button" class="resource" @click="toggleEvents">
+    <button
+      type="button"
+      class="resource"
+      :class="{ 'is-open': isOpen }"
+      @click="toggleEvents"
+    >
       {{ resource.name }}
+
+      <svg
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        class="chevron"
+      >
+        <path
+          d="M9 6L15 12L9 18"
+          stroke="#000000"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </button>
 
     <EventList v-if="isOpen" :resourceId="resource.id" />
@@ -66,6 +87,7 @@ function toggleEvents() {
 .resource {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 5px;
   border-bottom: 1px solid #ccc;
   height: 100%;
@@ -74,5 +96,18 @@ function toggleEvents() {
   height: var(--row-height);
   background-color: transparent;
   border: none;
+}
+
+.resource:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.chevron {
+  width: 20px;
+  height: 20px;
+}
+
+.is-open .chevron {
+  transform: rotate(90deg);
 }
 </style>
