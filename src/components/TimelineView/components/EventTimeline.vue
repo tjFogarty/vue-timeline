@@ -19,6 +19,8 @@ import { useCurrentMousePosition } from '../composables/useMousePosition';
 import useTimelineStore from '../store';
 import { DATE_FORMAT } from '../constants';
 
+const emit = defineEmits(['event-change']);
+
 const props = defineProps({
   data: {
     type: Object,
@@ -77,6 +79,7 @@ function handleStopDrag() {
   );
 
   store.updateEventDate(props.data.id, date);
+  emit('event-change', store.events[props.data.id]);
 
   isDragging.value = false;
   isDraggingEvent.value = null;

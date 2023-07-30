@@ -4,6 +4,8 @@
     :events="tasks"
     :column-width="35"
     :row-height="40"
+    @event-change="handleEventChange"
+    @date-change="handleDateChange"
   />
 </template>
 
@@ -71,4 +73,12 @@ const tasks = ref(
     });
   }),
 );
+
+function handleEventChange(event) {
+  console.log('Event Changed', event);
+}
+
+function handleDateChange(dates) {
+  console.log('Dates Changed', dates);
+}
 </script>

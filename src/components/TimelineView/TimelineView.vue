@@ -11,7 +11,6 @@
       ref="timelineEl"
       class="timeline teej-timeline"
       :class="{ 'is-dragging-event': isDraggingEvent }"
-      @click="handleTimelineClick"
     >
       <div class="grid-bg"></div>
 
@@ -31,6 +30,7 @@
         v-for="event in timelineStore.visibleEventTimelines"
         :key="event.id"
         :data="event"
+        @event-change="() => handleEventChange(event)"
       />
     </div>
   </div>
@@ -109,15 +109,14 @@ watch(
   { immediate: true },
 );
 
-const emit = defineEmits(['create-event', 'date-change']);
+const emit = defineEmits(['event-change', 'date-change']);
 
 const { container, goToToday } = provideTimeline();
 
-const { hoveredDate, hoveredResourceId, isDraggingEvent } =
-  provideMousePosition({ container });
+const { isDraggingEvent } = provideMousePosition({ container });
 
 watch(
-  [timelineStore.startDate, timelineStore.endDate],
+  () => [timelineStore.startDate, timelineStore.endDate],
   ([newStart, newEnd]) => {
     emit('date-change', {
       startDate: newStart,
@@ -130,14 +129,8 @@ onMounted(() => {
   goToToday();
 });
 
-function handleTimelineClick(e) {
-  if (e.target !== timelineEl.value) return;
-
-  emit('create-event', {
-    startDate: hoveredDate.value,
-    endDate: hoveredDate.value,
-    resourceId: hoveredResourceId.value,
-  });
+function handleEventChange(event) {
+  emit('event-change', event);
 }
 </script>
 

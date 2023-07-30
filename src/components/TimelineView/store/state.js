@@ -10,5 +10,5 @@ export default () => ({
   startDate: startOfLastMonth,
   endDate: endOfNextMonth,
   textDir: 'ltr',
-  openResources: [1],
+  openResources: [],
 });

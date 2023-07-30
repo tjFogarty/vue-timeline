@@ -31,6 +31,11 @@ import "@teej/vue-timeline/dist/style.css";
 | rowHeight        | Number | 50      | No       |
 | headerHeight     | Number | 80      | No       |
 
+## Events
+
+- `@event-change`
+- `@date-change`
+
 ### Resources
 
 - id String/Number
