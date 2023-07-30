@@ -19,6 +19,11 @@ import "@teej/vue-timeline/dist/style.css";
 <Timeline :resources="projects" :events="tasks" />
 ```
 
+## Events
+
+- `@event-change`
+- `@date-change`
+
 ## Props
 
 | Name             | Type   | Default | Required |
@@ -30,11 +35,6 @@ import "@teej/vue-timeline/dist/style.css";
 | resourceWidth    | Number | 200     | No       |
 | rowHeight        | Number | 50      | No       |
 | headerHeight     | Number | 80      | No       |
-
-## Events
-
-- `@event-change`
-- `@date-change`
 
 ### Resources
 
