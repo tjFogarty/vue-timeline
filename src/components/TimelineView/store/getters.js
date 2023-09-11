@@ -200,6 +200,10 @@ export default {
     });
   },
 
+  visibleDateRange() {
+    
+  },
+
   cssVars() {
     return {
       '--column-width': `${this.columnWidth}px`,

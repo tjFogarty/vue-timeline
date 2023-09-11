@@ -109,7 +109,11 @@ watch(
   { immediate: true },
 );
 
-const emit = defineEmits(['event-change', 'date-change']);
+const emit = defineEmits([
+  'event-change',
+  'date-change',
+  'visible-date-change',
+]);
 
 const { container, goToToday } = provideTimeline();
 
@@ -121,6 +125,16 @@ watch(
     emit('date-change', {
       startDate: newStart,
       endDate: newEnd,
+    });
+  },
+);
+
+watch(
+  () => [timelineStore.visibleStartDate, timelineStore.visibleEndDate],
+  ([visibleStart, visibleEnd]) => {
+    emit('visible-date-change', {
+      startDate: visibleStart,
+      endDate: visibleEnd,
     });
   },
 );

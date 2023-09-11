@@ -6,6 +6,7 @@
     :row-height="40"
     @event-change="handleEventChange"
     @date-change="handleDateChange"
+    @visible-date-change="visibleDateChange"
   />
 </template>
 
@@ -80,5 +81,9 @@ function handleEventChange(event) {
 
 function handleDateChange(dates) {
   console.log('Dates Changed', dates);
+}
+
+function visibleDateChange(data) {
+  console.log('Scrolling', data);
 }
 </script>

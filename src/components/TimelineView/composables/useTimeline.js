@@ -62,6 +62,11 @@ function useTimeline() {
         }
       }
     }
+
+    const startIndex = Math.floor(scrollLeft.value / timelineStore.columnWidth);
+    const endIndex = Math.floor((container.value.offsetWidth - timelineStore.resourceWidth) / timelineStore.columnWidth);
+    timelineStore.visibleStartDate = timelineStore.dates[startIndex];
+    timelineStore.visibleEndDate = timelineStore.dates[startIndex + endIndex];
   }
 
   function goToToday() {

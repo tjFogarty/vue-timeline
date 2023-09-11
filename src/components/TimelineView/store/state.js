@@ -11,4 +11,6 @@ export default () => ({
   endDate: endOfNextMonth,
   textDir: 'ltr',
   openResources: [],
+  visibleStartDate: null,
+  visibleEndDate: null,
 });
