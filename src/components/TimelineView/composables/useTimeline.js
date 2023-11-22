@@ -10,6 +10,9 @@ function useTimeline() {
   const isMovingBackwards = shallowRef(false);
   const isRTL = timelineStore.isRTL;
 
+  /**
+    * @param {Event} event
+  */
   function handleScroll(event) {
     const eventTarget = event.target;
     const scrollLeftVal = isRTL
