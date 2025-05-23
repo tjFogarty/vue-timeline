@@ -1,6 +1,6 @@
 {
   "name": "@teej/vue-timeline",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://timeline.tj.ie",
   "repository": {
     "type": "git",
@@ -9,9 +9,16 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/vue-timeline.umd.cjs",
-  "module": "./dist/vue-timeline.js",
+  "main": "./dist/vue-timeline.umd.js",
+  "module": "./dist/vue-timeline.es.js",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-timeline.es.js",
+      "require": "./dist/vue-timeline.umd.js"
+    },
+    "./style.css": "./dist/style.css"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
