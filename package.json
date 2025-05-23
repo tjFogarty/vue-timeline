@@ -1,13 +1,14 @@
 {
   "name": "@teej/vue-timeline",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://timeline.tj.ie",
   "repository": {
     "type": "git",
     "url": "https://github.com/tjFogarty/vue-timeline/"
   },
   "files": [
-    "dist"
+    "dist/**/*",
+    "dist/style.css"
   ],
   "main": "./dist/vue-timeline.umd.js",
   "module": "./dist/vue-timeline.es.js",
@@ -15,8 +16,10 @@
   "exports": {
     ".": {
       "import": "./dist/vue-timeline.es.js",
-      "require": "./dist/vue-timeline.umd.js"
+      "require": "./dist/vue-timeline.umd.js",
+      "types": "./dist/index.d.ts"
     },
+    "./dist/style.css": "./dist/style.css",
     "./style.css": "./dist/style.css"
   },
   "scripts": {
