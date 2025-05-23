@@ -13,6 +13,7 @@
         <span
           class="date-day-number"
           :class="{ today: date.hasSame(DateTime.local(), 'day') }"
+          :title="date.toFormat('EEEE, MMMM dd, yyyy')"
         >
           {{ date.toFormat('dd') }}
         </span>
@@ -25,27 +26,29 @@
 import { DateTime } from 'luxon';
 import useTimelineStore from '../store';
 
-defineProps({
-  month: {
-    type: String,
-    required: true,
-  },
-});
+defineProps({ month: { type: String, required: true } });
 
 const store = useTimelineStore();
 </script>
 
 <style scoped>
 .month {
-  background-color: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(4px);
+  background: #ffffff;
+  border-inline-end: 1px solid #f3f4f6;
 }
+
 .month-name {
   position: sticky;
   inset-inline-start: var(--resource-width);
   display: inline-block;
-  padding: 4px;
+  padding: 2px 16px;
   font-weight: 600;
+  color: #1f2937;
+  font-size: 13px;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .date-list {
@@ -58,26 +61,48 @@ const store = useTimelineStore();
 
 .date-item {
   text-align: center;
-  padding: 5px 0;
+  padding: 12px 0 8px 0;
   width: var(--column-width);
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.date-item:hover {
+  background: #f9fafb;
 }
 
 .date-day-letter {
   display: block;
-  margin-bottom: 4px;
-  font-size: 12px;
-  color: #575757;
-  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 10px;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .date-day-number {
   display: inline-block;
-  padding: 5px;
-  border-radius: 50%;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 13px;
+  color: #374151;
+  min-width: 28px;
+  transition: all 0.15s ease;
+  background: transparent;
+}
+
+.date-item:hover .date-day-number {
+  background: #e5e7eb;
+  color: #1f2937;
 }
 
 .today {
-  background: #ff7500;
-  color: white;
+  background: #000851 !important;
+  color: white !important;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.25);
 }
 </style>

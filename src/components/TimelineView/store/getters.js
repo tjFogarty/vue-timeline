@@ -79,8 +79,8 @@ export default {
   height() {
     let totalHeight = 0;
 
-    Object.values(this.rowHeights).forEach((h) => {
-      totalHeight += h;
+    this.resources.forEach((resource) => {
+      totalHeight += this.rowHeights[resource.id];
     });
 
     return totalHeight + this.headerHeight;
@@ -105,7 +105,7 @@ export default {
 
   eventPositions() {
     const positions = {};
-    this.visibleEventTimelines.forEach((event, index) => {
+    this.visibleEventTimelines.forEach((event) => {
       if (event.startDate < this.startDate || event.endDate > this.endDate) {
         return;
       }

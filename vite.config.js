@@ -7,7 +7,7 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'lib/main.js'),
       name: 'VueTimeline',
-      fileName: 'vue-timeline',
+      fileName: (format) => `vue-timeline.${format}.js`
     },
     rollupOptions: {
       external: ['vue', 'pinia'],

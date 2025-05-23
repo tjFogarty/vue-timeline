@@ -92,10 +92,44 @@ function useTimeline() {
   useEventListener(container, 'scroll', handleScroll, { passive: true });
   useEventListener(container, 'dragover', handleDragOver);
 
+  function scrollToPosition(x, smooth = false) {
+    if (container.value) {
+      const scrollOptions = {
+        left: isRTL ? -x : x,
+        behavior: smooth ? 'smooth' : 'auto'
+      };
+      container.value.scrollTo(scrollOptions);
+    }
+  }
+
+  function ensurePositionVisible(x, margin = 100) {
+    if (!container.value) return;
+    
+    const containerRect = container.value.getBoundingClientRect();
+    const containerWidth = containerRect.width;
+    const currentScroll = isRTL ? -container.value.scrollLeft : container.value.scrollLeft;
+    const resourceWidth = timelineStore.resourceWidth;
+    const visibleStart = currentScroll + resourceWidth;
+    const visibleEnd = currentScroll + containerWidth;
+    
+    // Check if position is outside visible area
+    if (x < visibleStart + margin) {
+      // Scroll left to show position
+      const newScroll = Math.max(0, x - resourceWidth - margin);
+      scrollToPosition(newScroll, true);
+    } else if (x > visibleEnd - margin) {
+      // Scroll right to show position
+      const newScroll = x - containerWidth + margin;
+      scrollToPosition(newScroll, true);
+    }
+  }
+
   return {
     container,
     goToToday,
     scrollLeft,
+    scrollToPosition,
+    ensurePositionVisible,
   };
 }
 

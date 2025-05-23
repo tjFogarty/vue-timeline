@@ -9,10 +9,7 @@ import { computed } from 'vue';
 import useTimelineStore from '../store';
 
 const props = defineProps({
-  resourceId: {
-    type: [Number, String],
-    required: true,
-  },
+  resourceId: { type: [Number, String], required: true },
 });
 
 const store = useTimelineStore();
@@ -45,7 +42,7 @@ const positionStyles = computed(() => {
 }
 
 .timeline-fill {
-  background-color: #007be0;
+  background-color: #655b91;
   width: 100%;
   height: 100%;
   border-radius: 20px;

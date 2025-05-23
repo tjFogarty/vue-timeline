@@ -33,6 +33,16 @@ export default {
     this.events.splice(eventIndex, 1, event);
   },
 
+  updateEventDuration(eventId, newStartDate, newEndDate) {
+    const eventIndex = this.events.findIndex((e) => e.id === eventId);
+    if (eventIndex !== -1) {
+      const event = { ...this.events[eventIndex] };
+      event.startDate = newStartDate;
+      event.endDate = newEndDate;
+      this.events.splice(eventIndex, 1, event);
+    }
+  },
+
   addResources(resources) {
     this.resources = [...this.resources, ...resources];
   },

@@ -22,5 +22,8 @@ const store = useTimelineStore();
   z-index: 1;
   top: 0;
   height: var(--header-height);
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 </style>

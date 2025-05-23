@@ -20,10 +20,10 @@ const store = useTimelineStore();
   pointer-events: none;
   transform: var(--transform);
   z-index: -1;
-  top: 0;
+  top: var(--header-height);
   opacity: 0.2;
-  height: 100%;
-  background-color: #ccc;
+  height: calc(var(--timeline-height) - var(--header-height));
+  background-color: #f3f4f6;
   width: calc(var(--column-width) * 2);
 }
 </style>
